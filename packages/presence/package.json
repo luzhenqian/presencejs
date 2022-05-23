@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "yomo",
+  "name": "@yomo/presence",
   "version": "next",
   "description": "@yomo/presencejs ⚡️ made realtime web applications edge-aware by YoMo",
   "keywords": [
@@ -14,10 +14,22 @@
     "webtransport"
   ],
   "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "engines": {
     "node": ">=10"
   },
-  "packageManager": "pnpm@7.1.3",
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build"
+  },
   "np": {
     "yarn": false,
     "contents": "dist"
@@ -35,7 +47,6 @@
   ],
   "module": "dist/presencejs.esm.js",
   "devDependencies": {
-    "@types/jest": "^27.5.1",
     "@types/node-fetch": "^2.5.12",
     "husky": "^7.0.4",
     "node-fetch": "^2.6.6",
