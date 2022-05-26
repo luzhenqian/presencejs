@@ -40,7 +40,7 @@
     {
       "name": "luzhenqian",
       "email": "luzhenqian98@gmail.com",
-      "url": "https://www.luzhqian.com"
+      "url": "https://www.luzhenqian.com"
     }
   ],
   "module": "dist/presencejs.esm.js",
@@ -55,6 +55,8 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
+    "@yomo/presence": "workspace:1",
+    "presence": "^0.2.3",
     "rxjs": "^6.6.6"
   },
   "repository": {

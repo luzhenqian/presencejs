@@ -27,14 +27,18 @@ importers:
     specifiers:
       '@types/node-fetch': ^2.5.12
       '@types/react': ^18.0.9
+      '@yomo/presence': workspace:1
       husky: ^7.0.4
       node-fetch: ^2.6.6
+      presence: ^0.2.3
       react: ^18.1.0
       rxjs: ^6.6.6
       tsdx: ^0.14.1
       tslib: ^2.3.1
       typescript: ^4.5.2
     dependencies:
+      '@yomo/presence': link:../presence
+      presence: 0.2.3
       rxjs: 6.6.7
     devDependencies:
       '@types/node-fetch': 2.6.1
@@ -2232,6 +2236,10 @@ packages:
       tweetnacl: 0.14.5
     dev: true
 
+  /between/0.1.3:
+    resolution: {integrity: sha512-Vqcb6/7oEMhUxDwS7pVdPJCwUiZ38UmUeFE9aoYYhuWZKXV5PkrYy8BXU9mth5I8lqI1TPWkIRAHH3y5Nd539w==}
+    dev: false
+
   /brace-expansion/1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
     dependencies:
@@ -2548,6 +2556,13 @@ packages:
       yaml: 1.10.2
     dev: true
 
+  /crdt/3.4.2:
+    resolution: {integrity: sha1-smk7lg8lziZ5jvgFCvESeEdsmzQ=}
+    dependencies:
+      between: 0.1.3
+      scuttlebutt: 5.5.20
+    dev: false
+
   /cross-spawn/6.0.5:
     resolution: {integrity: sha512-eTVLrBSt7fjbDygz805pMnstIs2VTBNkRm0qxZd+M7A5XDdxVRWO5MxGBXZhjY4cqLYLdtrGqRf8mBPmzwSpWQ==}
     engines: {node: '>=4.8'}
@@ -2605,6 +2620,10 @@ packages:
       whatwg-mimetype: 2.3.0
       whatwg-url: 7.1.0
     dev: true
+
+  /date-now/0.1.4:
+    resolution: {integrity: sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -2734,6 +2753,10 @@ packages:
     dependencies:
       webidl-conversions: 4.0.2
     dev: true
+
+  /duplex/1.0.0:
+    resolution: {integrity: sha1-arxcFuwX5MV4V4cnEmcAWQ06Ldo=}
+    dev: false
 
   /ecc-jsbn/0.1.2:
     resolution: {integrity: sha1-OoOpBOVDUyh4dMVkt1SThoSamMk=}
@@ -4107,6 +4130,10 @@ packages:
       istanbul-lib-report: 3.0.0
     dev: true
 
+  /iterate/0.1.0:
+    resolution: {integrity: sha1-V3B04Mxzuym1WMxWSCvxbzFqpfA=}
+    dev: false
+
   /jest-changed-files/25.5.0:
     resolution: {integrity: sha512-EOw9QEqapsDT7mKF162m8HFzRPbmP8qJQny6ldVOdOVBz3ACgPm/1nAn5fPQ/NDaYhX/AHkrGwwkCncpAVSXcw==}
     engines: {node: '>= 8.3'}
@@ -4946,6 +4973,10 @@ packages:
       minimist: 1.2.6
     dev: true
 
+  /monotonic-timestamp/0.0.9:
+    resolution: {integrity: sha1-W6Wtx6rIXh1853voRxYe0kazlgM=}
+    dev: false
+
   /mri/1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -5032,6 +5063,12 @@ packages:
   /node-releases/2.0.4:
     resolution: {integrity: sha512-gbMzqQtTtDz/00jQzZ21PQzdI9PyLYqUSvD0p3naOhX4odFji0ZxYdnVwPTxmSwkmxhcFImpozceidSG+AgoPQ==}
     dev: true
+
+  /node-uuid/1.4.8:
+    resolution: {integrity: sha1-sEDrCSOWivq/jTL7HxfxFn/auQc=}
+    deprecated: Use uuid module instead
+    hasBin: true
+    dev: false
 
   /normalize-package-data/2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
@@ -5366,6 +5403,18 @@ packages:
     resolution: {integrity: sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=}
     engines: {node: '>= 0.8.0'}
     dev: true
+
+  /presence/0.2.3:
+    resolution: {integrity: sha1-i4x230MbyR44a2lJpBL2YuKIy3w=}
+    peerDependencies:
+      reducible: ~1.0.5
+    dependencies:
+      crdt: 3.4.2
+      date-now: 0.1.4
+      node-uuid: 1.4.8
+      reducers: github.com/Raynos/reducers/413bd58e18ea73a244e2758a8b93c51dfea81268
+      xtend: 1.0.3
+    dev: false
 
   /prettier-linter-helpers/1.0.0:
     resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
@@ -5854,6 +5903,15 @@ packages:
       xmlchars: 2.2.0
     dev: true
 
+  /scuttlebutt/5.5.20:
+    resolution: {integrity: sha1-Gz815o9T4XvVCYXV8QmTv/Taz6Y=}
+    dependencies:
+      duplex: 1.0.0
+      iterate: 0.1.0
+      monotonic-timestamp: 0.0.9
+      stream-serializer: 1.0.0
+    dev: false
+
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
     hasBin: true
@@ -6116,6 +6174,10 @@ packages:
     resolution: {integrity: sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /stream-serializer/1.0.0:
+    resolution: {integrity: sha1-qiEvNDkg+Mxq/8ZcJAunAOtsSbk=}
+    dev: false
 
   /string-length/3.1.0:
     resolution: {integrity: sha512-Ttp5YvkGm5v9Ijagtaz1BnN+k9ObpvS0eIBblPMp2YWL8FBmi9qblQ9fexc2k/CXFgrTIteU3jAw3payCnwSTA==}
@@ -6837,6 +6899,11 @@ packages:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
     dev: true
 
+  /xtend/1.0.3:
+    resolution: {integrity: sha1-P12Tc1PM7Y4IU5mlY/2yJUHClgo=}
+    engines: {node: '>=0.4'}
+    dev: false
+
   /y18n/4.0.3:
     resolution: {integrity: sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==}
     dev: true
@@ -6874,3 +6941,11 @@ packages:
       y18n: 4.0.3
       yargs-parser: 18.1.3
     dev: true
+
+  github.com/Raynos/reducers/413bd58e18ea73a244e2758a8b93c51dfea81268:
+    resolution: {tarball: https://codeload.github.com/Raynos/reducers/tar.gz/413bd58e18ea73a244e2758a8b93c51dfea81268}
+    name: reducers
+    version: 3.0.0-alpha
+    peerDependencies:
+      reducible: ~1.x.0
+    dev: false

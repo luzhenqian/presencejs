@@ -1,15 +1,24 @@
-import React, { useMemo, useState } from "react";
-import { PresenceContext } from "./Context";
+import React, { useMemo, useState } from 'react';
+import { PresenceContext } from './Context';
+import Presence from '@yomo/presence';
+import { Auth } from '@yomo/presence/dist/type';
 
-// TODO: add type
-export let presence: any;
+export let presence: Presence;
 
-// TODO: add type
-function Provider({ presence, host, id, auth, children, context }:any) {
+export type PresenceProviderProps = {
+  presence?: Presence;
+  host: string;
+  id?: string;
+  auth?: Auth;
+  children: React.ReactNode;
+  context?: React.Context<any>;
+};
+
+function Provider({ presence, host, id, auth, children, context }: any) {
   const [self, setSelf] = useState({ id: 1 });
   const [peers, setPeers] = useState([]);
 
-  // presence = new Presence()
+  presence = new Presence(host, { auth });
 
   const contextValue = useMemo(() => {
     return {
@@ -23,7 +32,7 @@ function Provider({ presence, host, id, auth, children, context }:any) {
       },
       offline: () => {
         // presence.send('OFF_LINE')
-      }
+      },
     };
   }, [self, peers]);
 

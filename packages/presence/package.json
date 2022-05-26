@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@yomo/presence",
-  "version": "next",
+  "version": "1.0.0",
   "description": "@yomo/presencejs ⚡️ made realtime web applications edge-aware by YoMo",
   "keywords": [
     "yomo",
@@ -39,7 +39,7 @@
     {
       "name": "luzhenqian",
       "email": "luzhenqian98@gmail.com",
-      "url": "https://www.luzhqian.com"
+      "url": "https://www.luzhenqian.com"
     },
     {
       "name": "osdodo"
