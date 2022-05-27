@@ -14,7 +14,7 @@ export type PresenceProviderProps = {
   context?: React.Context<any>;
 };
 
-function Provider({ presence, host, id, auth, children, context }: any) {
+function Provider({ presence, host, id, auth, children, context }: PresenceProviderProps) {
   const [self, setSelf] = useState({ id: 1 });
   const [peers, setPeers] = useState([]);
 
