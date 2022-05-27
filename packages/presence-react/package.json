@@ -56,6 +56,7 @@
   },
   "dependencies": {
     "@yomo/presence": "workspace:1",
+    "nanoid": "^3.3.4",
     "presence": "^0.2.3",
     "rxjs": "^6.6.6"
   },

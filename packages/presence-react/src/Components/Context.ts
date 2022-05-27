@@ -6,8 +6,8 @@ import React from 'react';
 //   room2: [{ id: '1', k1: 'v1', k2: 'v2' }],
 // };
 
-export type PresenceContextValue<T = any> = {
-  [key in string]: T;
+export type PresenceContextValue<R = any> = {
+  [key in string]: R;
 };
 
 export const PresenceContext = React.createContext<PresenceContextValue>(null as any);
