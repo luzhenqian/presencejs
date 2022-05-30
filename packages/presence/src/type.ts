@@ -12,9 +12,11 @@ export type Auth = {
   endpoint?: string;
 };
 
+export type ConnectType = 'WebSocket' | 'WebTransport';
 export interface PresenceOption {
   // Authentication
   auth?: Auth;
+  type?:ConnectType;
   // The reconnection interval value.
   reconnectInterval?: number;
   // The reconnection attempts value.

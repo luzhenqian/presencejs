@@ -8,13 +8,13 @@ import {
   getProtocol,
   loadWasm,
 } from './helper';
-import { EventMessage, PresenceOption } from './type';
+import { EventMessage, PresenceOption, ConnectType } from './type';
 
 export default class Presence extends Subject<EventMessage> {
   // Service url
   public host: string;
   // Types of connection services
-  public type: 'WebSocket' | 'WebTransport';
+  public type: ConnectType;
   // WebSocketSubject instance
   private _socket$: WebSocketSubject<EventMessage> | undefined;
   // Socket Subscription
@@ -39,7 +39,7 @@ export default class Presence extends Subject<EventMessage> {
   constructor(host: string, option: PresenceOption) {
     super();
     this.host = host;
-    this.type = 'WebSocket';
+    this.type = option.type || 'WebSocket';// TODO: set type not working
     this._reconnectInterval = option?.reconnectInterval || 5000;
     this._reconnectAttempts = option?.reconnectAttempts || 3;
 

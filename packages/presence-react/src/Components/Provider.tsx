@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { 
+} from 'react';
 import { PresenceContext } from './Context';
 import Presence from '@yomo/presence';
-import type { Auth } from '@yomo/presence/dist/type';
+import type { Auth, ConnectType } from '@yomo/presence/dist/type';
 import { nanoid } from 'nanoid'
 
-export let presence: Presence;
+export let _presence: Presence;
 export let _id: string;
 
 export type PresenceProviderProps<R = any> = {
@@ -12,6 +13,7 @@ export type PresenceProviderProps<R = any> = {
   host: string;
   id?: string;
   auth?: Auth;
+  type?: ConnectType;
   children: React.ReactNode;
   context?: React.Context<R>;
 };
@@ -21,36 +23,18 @@ function Provider({
   host,
   id,
   auth,
+  type,
   children,
   context,
 }: PresenceProviderProps) {
   _id = _id || id || nanoid()
-  const [self, setSelf] = useState({ id: _id });
-  const [peers, setPeers] = useState([]);
+  _presence = _presence || presence || new Presence(host, { auth, type });
 
-  presence = new Presence(host, { auth });
-  presence.on('connection', ()=>{
+  _presence.on('connection', ()=>{
     // TODO: some actions
-    setPeers([])
   })
 
-  const contextValue = useMemo(() => {
-    return {
-      self,
-      peers,
-      setState: (state: any) => {
-        setSelf({ ...self, ...state });
-        // TODO: need get roomName
-        if(presence){
-          // presence.toRoom(roomName)
-        }
-        // presence.send('SYNC')
-      },
-      offline: () => {
-        // presence.send('OFF_LINE')
-      },
-    };
-  }, [self, peers]);
+  const contextValue ={}
 
   const Context = context || PresenceContext;
 

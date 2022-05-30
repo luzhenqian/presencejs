@@ -1,11 +1,11 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import React from 'react';
 import { usePresence } from '../../../packages/presence-react/dist'
 
 const Home: NextPage = () => {
-  const p = usePresence()
+  const p = usePresence("r1")
   console.log('p:', p);
-  
   return (
     <div>
       <Head>

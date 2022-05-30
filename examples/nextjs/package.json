@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "next": "12.1.6",
-    "react": "18.1.0",
+    "react": "file:///Users/luzhenqian/Documents/xile/presencejs/packages/presence-react/node_modules/react",
     "react-dom": "18.1.0"
   },
   "devDependencies": {
