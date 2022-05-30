@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { PresenceContext } from "../components/Context";
-import { presence } from "../components/Provider";
 import { usePresenceContext as useDefaultPresenceContext } from "./usePresenceContext";
 
 export function createPresenceHook(context = PresenceContext) {
@@ -9,12 +8,8 @@ export function createPresenceHook(context = PresenceContext) {
       ? useDefaultPresenceContext
       : () => useContext(context);
 
-  const toRoom = (roomID: string) => {
-    // presence.toRoom(roomID)
-  };
-
-  return function (roomID: string, initialState: any) {
-    toRoom(roomID);
+      // roomName: string, initialState: any
+  return function () {
     // TODO: set initialState
     return usePresenceContext();
   };

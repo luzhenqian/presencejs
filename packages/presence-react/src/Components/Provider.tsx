@@ -31,6 +31,7 @@ function Provider({
   presence = new Presence(host, { auth });
   presence.on('connection', ()=>{
     // TODO: some actions
+    setPeers([])
   })
 
   const contextValue = useMemo(() => {
@@ -39,8 +40,10 @@ function Provider({
       peers,
       setState: (state: any) => {
         setSelf({ ...self, ...state });
-        // TODO: need get roomID
-        // presence.toRoom('roomID')
+        // TODO: need get roomName
+        if(presence){
+          // presence.toRoom(roomName)
+        }
         // presence.send('SYNC')
       },
       offline: () => {
