@@ -39,7 +39,7 @@ export default class Presence extends Subject<EventMessage> {
   constructor(host: string, option: PresenceOption) {
     super();
     this.host = host;
-    this.type = option.type || 'WebSocket';// TODO: set type not working
+    this.type = option.type || 'WebTransport';
     this._reconnectInterval = option?.reconnectInterval || 5000;
     this._reconnectAttempts = option?.reconnectAttempts || 3;
 
@@ -53,8 +53,8 @@ export default class Presence extends Subject<EventMessage> {
 
     if (scheme === 'https') {
       // @ts-ignore
-      if (typeof WebTransport !== 'undefined') {
-        this.type = 'WebTransport';
+      if (typeof WebTransport === 'undefined') {
+        this.type = 'WebSocket';
       } else {
         this.host = host.replace(/^https/, 'wss');
       }
