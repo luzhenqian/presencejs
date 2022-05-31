@@ -1,13 +1,12 @@
 import { useContext } from 'react';
-import { PresenceContext } from '../components/Context';
+import { PresenceContext, PresenceContextValue } from '../components/Context';
+import { PresenceHook } from '../types';
 import { usePresenceContext as useDefaultPresenceContext } from './usePresenceContext';
 
-interface PresenceHook {
-  (roomName: string): void;
-}
-
-export function createPresenceHook(context = PresenceContext) {
-  const usePresenceContext: PresenceHook =
+export function createPresenceHook(
+  context = PresenceContext
+): (roomName: string) => PresenceHook | PresenceContextValue {
+  const usePresenceContext =
     context === PresenceContext
       ? useDefaultPresenceContext
       : () => useContext(context);

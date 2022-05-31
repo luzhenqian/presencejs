@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
-import { PresenceContext, PresenceContextValue } from '../components/Context';
+import { PresenceContext } from '../components/Context';
 import { _presence, _id } from '../components/Provider';
+import { PresenceHook } from '../types';
 
 /**
  * A hook to access the value of the `PresenceContext`. This is a low-level
@@ -18,21 +19,20 @@ import { _presence, _id } from '../components/Provider';
  *   return <div>{room1.length}</div>
  * }
  */
-export function usePresenceContext(
-  roomName: string
-): PresenceContextValue | null {
+export function usePresenceContext(roomName: string): PresenceHook {
   const contextValue = useContext(PresenceContext);
   const [self, setSelf] = useState({ id: _id });
   const [peers, setPeers] = useState<any>([]);
   // if(typeof window === 'undefined') return null
   _presence.toRoom(roomName);
   _presence.on('SYNC', (state: any) => {
-    console.log('s:', state);
-    
+    if (state.id === _id) return;
+
     const peerIdx = peers.findIndex(
       ({ id }: { id: string }) => id === state.id
     );
-    if (peerIdx) {
+
+    if (peerIdx > -1) {
       peers[peerIdx] = state;
       setPeers([...peers]);
       return;
