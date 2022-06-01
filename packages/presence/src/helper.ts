@@ -96,13 +96,24 @@ export function updateQueryStringParameter(
  */
 export async function getAuthorizedURL(host: string, option: PresenceOption) {
   // `publickey` is the way to test
-  // if (option?.auth?.type === 'publickey' && option.auth.publicKey) {
-  //     return updateQueryStringParameter(
-  //         host,
-  //         'public_key',
-  //         option.auth.publicKey
-  //     );
-  // }
+  if (option?.auth?.type === 'publickey' && option.auth.publicKey) {
+    const response = await fetch('https://prsc.yomo.dev/api/v1/public/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'public_key': option.auth.publicKey
+      })
+    });
+    const data = (await response.json()).data;
+
+    return updateQueryStringParameter(
+      host,
+      'token',
+      data.token
+    );
+  }
 
   // `token` is the way to go for production environments
   if (option?.auth?.type === 'token' && option.auth.endpoint) {
