@@ -51,11 +51,10 @@ export default class Presence extends Subject<EventMessage> {
       );
     }
 
-    if (scheme === 'https') {
-      // @ts-ignore
-      if (typeof WebTransport === 'undefined') {
-        this.type = 'WebSocket';
-      } else {
+    // @ts-ignore
+    if (typeof WebTransport === 'undefined') {
+      this.type = 'WebSocket';
+      if (scheme === 'https') {
         this.host = host.replace(/^https/, 'wss');
       }
     }
