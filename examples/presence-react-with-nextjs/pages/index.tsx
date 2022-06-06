@@ -10,7 +10,7 @@ const Home: NextPage = () => {
   const clickHandle = ()=>{
     const el = inputRef.current
     if(el){
-      setState({name:el.value})
+      setState({message:el.value})
       el.value = ''
     }
   }
@@ -24,7 +24,8 @@ const Home: NextPage = () => {
       <div>
         <div>name:</div>
         <input ref={inputRef}/>
-        <div>{peers.length}</div>
+        <div>其他用户：</div>
+        <div>{peers.map(({id, message}:any)=><div key={id}>{id}</div>)}</div>
       </div>
       <button onClick={clickHandle}>send</button>
     </div>

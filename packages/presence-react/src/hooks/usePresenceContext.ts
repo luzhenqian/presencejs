@@ -25,6 +25,30 @@ export function usePresenceContext(roomName: string): PresenceHook {
   const [peers, setPeers] = useState<any>([]);
   // if(typeof window === 'undefined') return null
   _presence.toRoom(roomName);
+  _presence.on('ONLINE', (data: any) => {
+    console.log('有人上线啦！上线的人的数据：', data, '我自己的数据：', self);
+    if (data.id === _id) return;
+    _presence.send('SYNC', self);
+    const idx = peers.findIndex((item: any) => item.id === data.id);
+    if (!idx) {
+      setPeers([...peers, data]);
+    } else {
+      const newPeers = [...peers];
+      newPeers[idx] = data;
+      setPeers(newPeers);
+    }
+  });
+
+  // _presence.on('connection', (data: any) => {
+  //   console.log(1);
+  //   _presence.send('ONLINE', { id: _id });
+  // });
+
+  // FIXME: don't use settimeout
+  setTimeout(() => {
+    _presence.send('ONLINE', self);
+  }, 1000);
+
   _presence.on('SYNC', (state: any) => {
     if (state.id === _id) return;
 
