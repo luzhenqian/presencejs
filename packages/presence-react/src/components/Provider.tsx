@@ -30,11 +30,7 @@ function Provider({
   _id = _id || id || nanoid()
   _presence = _presence || presence || new Presence(host, { auth, type });
 
-  _presence.on('connection', () => {
-    // TODO: some actions
-  })
-
-  const contextValue ={}
+  const contextValue = {}
 
   const Context = context || PresenceContext;
 

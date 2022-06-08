@@ -7,6 +7,7 @@ const Home: NextPage = () => {
   const { self, setState, peers } = usePresence("r1")
   const inputRef = useRef<any>()
   console.log('self:', self);
+  console.log('peers:', peers);
   const clickHandle = ()=>{
     const el = inputRef.current
     if(el){
