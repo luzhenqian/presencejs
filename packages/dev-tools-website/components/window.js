@@ -5,17 +5,17 @@ export function Window() {
   const frameRef = useRef();
   const reload = () => {
     if (frameRef.current) {
-      frameRef.current.contentWindow.postMessage('reload');
+      frameRef.current.contentWindow.postMessage('reload', url);
     }
   };
   const back = () => {
     if (frameRef.current) {
-      frameRef.current.contentWindow.postMessage('back');
+      frameRef.current.contentWindow.postMessage('back', url);
     }
   };
   const forward = () => {
     if (frameRef.current) {
-      frameRef.current.contentWindow.postMessage('forward');
+      frameRef.current.contentWindow.postMessage('forward', url);
     }
   };
   useEffect(() => {
