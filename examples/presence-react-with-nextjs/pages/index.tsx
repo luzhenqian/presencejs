@@ -5,6 +5,7 @@ import { usePresence } from '../../../packages/presence-react/dist'
 
 const Home: NextPage = () => {
   const { self, setState, peers } = usePresence("r1")
+
   const inputRef = useRef<any>()
   console.log('self:', self);
   console.log('peers:', peers);

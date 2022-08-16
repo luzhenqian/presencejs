@@ -21,11 +21,17 @@ import { PresenceHook } from '../types';
  */
 export function usePresenceContext(roomName: string): PresenceHook {
   const contextValue = useContext(PresenceContext);
+
   // if (contextValue[roomName]) return contextValue[roomName];
   const [self, setSelf] = useState({ id: _id });
   const [peers, setPeers] = useState<any>([]);
 
   useEffect(() => {
+
+    // if (_presence.hasCallbacks('connected', func)) {
+    //   return;
+    // }
+
     _presence.on('connected', () => {
       _presence.toRoom(roomName);
 
@@ -73,7 +79,13 @@ export function usePresenceContext(roomName: string): PresenceHook {
         setPeers(newPeers);
       });
     });
-  }, []);
+  }, [self, peers]);
+
+  console.log(contextValue[roomName]);
+
+  if (roomName in contextValue) {
+    return contextValue[roomName];
+  }
 
   contextValue[roomName] = {
     self,

@@ -23,4 +23,8 @@
       window.history.forward();
     }
   });
+
+  console.log(1);
+  
+  window.parent.postMessage('pong', 'http://localhost:3003');
 })();
