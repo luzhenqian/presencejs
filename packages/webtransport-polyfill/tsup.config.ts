@@ -5,5 +5,6 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  target: 'es5'
+  target: 'es5',
+  format: ['iife', 'cjs'],
 });

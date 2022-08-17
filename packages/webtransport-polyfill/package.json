@@ -14,7 +14,7 @@
     "src"
   ],
   "scripts": {
-    "start": "tsup watch",
+    "start": "tsup ./src/index.ts --dts --watch",
     "build": "tsup ./src/index.ts --dts"
   },
   "np": {
