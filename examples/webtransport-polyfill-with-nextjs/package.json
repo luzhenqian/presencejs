@@ -11,7 +11,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@yomo/webtransport-polyfill": "file:///Users/luzhenqian/Work/xile/presencejs/packages/webtransport-polyfill/dist/index.js",
     "dayjs": "^1.11.5",
     "express-ws": "^5.0.2",
     "next": "12.2.5",

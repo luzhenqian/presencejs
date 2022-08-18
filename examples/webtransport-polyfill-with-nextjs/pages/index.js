@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
-import WebTransport from '@yomo/webtransport-polyfill';
+import WebTransport from '../webtransport-polyfill';
 import dayjs from 'dayjs';
 
 let id = 0;
@@ -92,17 +92,17 @@ export default function Home() {
           crossorigin="anonymous"
         />
       </Head>
-      <form class="pure-form" onSubmit={e => e.preventDefault()}>
+      <form className="pure-form" onSubmit={e => e.preventDefault()}>
         <fieldset>
           <input ref={inputRef} type="text" />
-          <button class="pure-button pure-button-primary" onClick={sendData}>
+          <button className="pure-button pure-button-primary" onClick={sendData}>
             send data
           </button>
         </fieldset>
       </form>
-      <form class="pure-form"></form>
+      <form className="pure-form"></form>
 
-      <table class="pure-table pure-table-horizontal">
+      <table className="pure-table pure-table-horizontal">
         <thead>
           <tr>
             <th>ID</th>

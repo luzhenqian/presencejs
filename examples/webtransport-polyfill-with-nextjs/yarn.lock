@@ -150,8 +150,8 @@
     "@typescript-eslint/types" "5.33.1"
     "eslint-visitor-keys" "^3.3.0"
 
-"@yomo/webtransport-polyfill@file:///Users/luzhenqian/Work/xile/presencejs/packages/webtransport-polyfill/dist/index.js":
-  "resolved" "file:../../packages/webtransport-polyfill/dist/index.js"
+"@yomo/webtransport-polyfill@file://../../packages/webtransport-polyfill/dist/index.js":
+  "resolved" "file:../../../../../../../packages/webtransport-polyfill/dist/index.js"
 
 "accepts@~1.3.8":
   "integrity" "sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw=="
