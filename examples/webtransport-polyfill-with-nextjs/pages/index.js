@@ -42,7 +42,7 @@ export default function Home() {
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
-            reader.releaseLock();
+            // reader.releaseLock();
             break;
           }
           console.log('服务端返回的数据报：', value);

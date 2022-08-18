@@ -10,25 +10,25 @@ declare global {
 export class WebTransport {
   public closed: Promise<unknown>;
   public ready: Promise<unknown>;
-  #wss: WebSocket;
+  #ws: WebSocket;
   #connErr: any;
   datagrams: DataGrams;
   constructor(public url: string) {
     this.closed = new Promise((resolve, reject) => { });
     this.ready = new Promise((resolve, reject) => { 
-      this.#wss = new WebSocket(url);
-      this.#wss.addEventListener('open', () => {
+      this.#ws = new WebSocket(url);
+      this.#ws.addEventListener('open', () => {
         resolve(null);
       }),
-      this.#wss.addEventListener('error', (err) => {
+      this.#ws.addEventListener('error', (err) => {
         this.#connErr = err;
         reject(err);
       }),
-      this.#wss.addEventListener('close', () => {
+      this.#ws.addEventListener('close', () => {
         this.closed = new Promise((resolve, reject) => { });
         reject(this.#connErr);
       }),
-      this.datagrams = new DataGrams(this.#wss);
+      this.datagrams = new DataGrams(this.#ws);
     });
   }
 }
