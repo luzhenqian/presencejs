@@ -23,9 +23,16 @@ export class DataGrams {
         } else if (prop === 'readable') {
           return new ReadableStream({
             start(controller) {
+              let timer: any | null = null;
               const cb = ev => {
+                if (timer) {
+                  clearTimeout(timer);
+                }
                 controller.enqueue(ev.data);
-                ws.removeEventListener('message', cb);
+                timer = setTimeout(
+                  () => ws.removeEventListener('message', cb),
+                  1_000
+                );
               };
               ws.addEventListener('message', cb);
             },

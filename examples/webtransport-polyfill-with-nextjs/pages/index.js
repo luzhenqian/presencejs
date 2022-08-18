@@ -6,13 +6,14 @@ import styles from '../styles/Home.module.css';
 
 export default function Home() {
   let [wt, setWt] = useState(null);
+  let [log, setLog] = useState([]);
   useEffect(() => {
     async function f() {
       if (wt === null) {
-        const transport = new WebTransport('ws://localhost:5002/to_upper_case');
-        // const transport = new WebTransport(
-        //   'wss://webtransport-server.herokuapp.com/to_upper_case'
-        // );
+        // const transport = new WebTransport('ws://localhost:5002/to_upper_case');
+        const transport = new WebTransport(
+          'wss://webtransport-server.herokuapp.com/to_upper_case'
+        );
 
         setWt(transport);
 
