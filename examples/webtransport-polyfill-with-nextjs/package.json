@@ -3,20 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./server.mjs & next dev",
-    "dev:serve": "nodemon ./server.mjs",
+    "dev": "nodemon ./server.js & next dev",
+    "dev:serve": "nodemon ./server.js",
     "dev:fe": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@yomo/webtransport-polyfill": "file:///Users/luzhenqian/Work/xile/presencejs/packages/webtransport-polyfill/dist/index.js",
+    "express-ws": "^5.0.2",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-use-websocket": "^4.2.0",
-    "ws": "^8.8.1",
-    "@yomo/webtransport-polyfill": "file:///Users/luzhenqian/Work/xile/presencejs/packages/webtransport-polyfill/dist/index.js"
+    "ws": "^8.8.1"
   },
   "devDependencies": {
     "eslint": "8.22.0",

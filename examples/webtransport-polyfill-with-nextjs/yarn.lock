@@ -743,7 +743,14 @@
   "resolved" "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   "version" "1.8.1"
 
-"express@^4.18.1":
+"express-ws@^5.0.2":
+  "integrity" "sha512-0uvmuk61O9HXgLhGl3QhNSEtRsQevtmbL94/eILaliEADZBHZOQUAiHFrGPrgsjikohyrmSG5g+sCfASTt0lkQ=="
+  "resolved" "https://registry.npmjs.org/express-ws/-/express-ws-5.0.2.tgz"
+  "version" "5.0.2"
+  dependencies:
+    "ws" "^7.4.6"
+
+"express@^4.0.0 || ^5.0.0-alpha.1", "express@^4.18.1":
   "integrity" "sha512-zZBcOX9TfehHQhtupq57OF8lFZ3UZi08Y97dwFCkD8p9d/d2Y3M+ykKcwaMDEL+4qyUolgBDX6AblpR3fL212Q=="
   "resolved" "https://registry.npmjs.org/express/-/express-4.18.1.tgz"
   "version" "4.18.1"
@@ -1988,6 +1995,11 @@
   "integrity" "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="
   "resolved" "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
   "version" "1.0.2"
+
+"ws@^7.4.6":
+  "integrity" "sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q=="
+  "resolved" "https://registry.npmjs.org/ws/-/ws-7.5.9.tgz"
+  "version" "7.5.9"
 
 "ws@^8.8.1":
   "integrity" "sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA=="

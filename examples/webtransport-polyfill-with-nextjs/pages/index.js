@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import WebTransport from '@yomo/webtransport-polyfill';
 import styles from '../styles/Home.module.css';
 
@@ -9,7 +9,11 @@ export default function Home() {
   useEffect(() => {
     async function f() {
       if (wt === null) {
-        const transport = new WebTransport('ws://localhost:8080/');
+        const transport = new WebTransport('ws://localhost:5002/to_upper_case');
+        // const transport = new WebTransport(
+        //   'wss://webtransport-server.herokuapp.com/to_upper_case'
+        // );
+
         setWt(transport);
 
         transport.closed
@@ -31,12 +35,14 @@ export default function Home() {
         const data2 = new Uint8Array([68, 69, 70]);
         writer.write(data1);
         writer.write(data2);
+        await writer.close();
 
         // 从服务端读取数据报
         const reader = transport.datagrams.readable.getReader();
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
+            reader.releaseLock();
             break;
           }
           console.log('服务端返回的数据报：', value);
@@ -45,6 +51,25 @@ export default function Home() {
     }
     f();
   }, [wt]);
+  let inputRef = useRef();
+  const sendData = async () => {
+    const inputEl = inputRef.current;
+    const data = inputEl.value;
+    if (data) {
+      const writer = wt.datagrams.writable.getWriter();
+      console.log(writer);
+      writer.write(data);
+      const reader = wt.datagrams.readable.getReader();
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        console.log('服务端返回的数据报：', value);
+      }
+      inputEl.value = '';
+    }
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -52,8 +77,10 @@ export default function Home() {
         <meta name="description" content="WebTransport Polyfill Test" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <input ref={inputRef} type="text" />
+      <button onClick={sendData}>send data</button>
 
-      <main className={styles.main}>123</main>
+      <div></div>
     </div>
   );
 }
