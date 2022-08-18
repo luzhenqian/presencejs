@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import styles from '../styles/Home.module.css';
 
 export default function Home() {
   let [ws, setWs] = useState(null);
@@ -22,14 +21,14 @@ export default function Home() {
     }
   }, [ws]);
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>WebTransport Polyfill Test</title>
         <meta name="description" content="WebTransport Polyfill Test" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>123</main>
+      <main>123</main>
     </div>
   );
 }
