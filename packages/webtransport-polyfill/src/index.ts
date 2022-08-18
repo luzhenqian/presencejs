@@ -15,7 +15,8 @@ export class WebTransport {
   datagrams: DataGrams;
   constructor(public url: string) {
     this.closed = new Promise((resolve, reject) => { });
-    this.ready = new Promise((resolve, reject) => { 
+    this.ready = new Promise((resolve, reject) => {
+      url = url.replace(/^http/, 'ws');
       this.#ws = new WebSocket(url);
       this.#ws.addEventListener('open', () => {
         resolve(null);
