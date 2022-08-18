@@ -80,7 +80,7 @@ export default function Home() {
     }
   };
   return (
-    <div style={{ minWidth: '600px', margin: 'auto', width: '600px' }}>
+    <div style={{ minWidth: '800px', margin: 'auto', width: '600px' }}>
       <Head>
         <title>WebTransport Polyfill Test</title>
         <meta name="description" content="WebTransport Polyfill Test" />

@@ -1,5 +1,8 @@
 // import "regenerator-runtime/runtime.js";
-import { DataGrams } from "./datagrams";
+import { BidirectionalStream } from "./BidirectionalStream";
+import { DataGrams } from "./DataGrams";
+import { ReceiveStream } from "./ReceiveStream";
+import { SendStream } from "./SendStream";
 
 declare global {
   interface Window {
@@ -31,6 +34,20 @@ export class WebTransport {
       }),
       this.datagrams = new DataGrams(this.#ws);
     });
+  }
+  createSendStream(): SendStream {
+    return new SendStream(this.#ws);
+  }
+  receiveStream(): ReceiveStream{
+    return new ReceiveStream(this.#ws);
+  }
+  createBidirectionalStream(): Promise<BidirectionalStream> {
+    return new Promise((resolve, reject) => {
+      resolve(new BidirectionalStream(this.#ws));
+    })
+  }
+  receiveBidrectionalStreams(): BidirectionalStream {
+    return new BidirectionalStream(this.#ws);
   }
 }
 
