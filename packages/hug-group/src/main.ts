@@ -50,10 +50,16 @@ export default class HugGroup extends LitElement {
           this.users = [...this.users, data];
       });
 
+      this.yomo.on('OFFLINE', (data) => {
+        const idx = this.users.findIndex((user) => user.id === data.id);
+        if (idx !== -1) this.users.splice(idx, 1);
+      });
+
       this.yomo.send('ONLINE', this.user);
     });
 
     window.onbeforeunload = () => {
+      this.yomo.send('OFFLINE', this.user);
       this.yomo.close();
     };
     return this; // turn off shadow dom to access external styles
