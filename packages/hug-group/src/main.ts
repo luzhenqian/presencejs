@@ -31,21 +31,23 @@ export default class HugGroup extends LitElement {
 
     this.yomo.on('connected', () => {
       console.log('Connected to server: ', this.yomo.host);
+
       this.yomo.toRoom('hug-group');
+
       this.yomo.on('ONLINE', (data) => {
-        if (data.id !== this.user.id) {
-          if (!this.users.find((user) => user.id === data.id))
-            this.users = [...this.users, data];
-        } else {
-          this.yomo.send('SYNC', this.user);
-        }
+        if (data.id === this.user.id) return;
+
+        if (!this.users.find((user) => user.id === data.id))
+          this.users = [...this.users, data];
+
+        this.yomo.send('SYNC', this.user);
       });
 
       this.yomo.on('SYNC', (data) => {
-        if (data.id !== this.user.id) {
-          if (!this.users.find((user) => user.id === data.id))
-            this.users = [...this.users, data];
-        }
+        if (data.id === this.user.id) return;
+
+        if (!this.users.find((user) => user.id === data.id))
+          this.users = [...this.users, data];
       });
 
       this.yomo.send('ONLINE', this.user);
