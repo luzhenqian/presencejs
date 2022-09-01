@@ -1,24 +1,26 @@
-export type EventMessage = {
-  event: string;
-  data: any;
+export type MetaData = {
+  id: string;
 };
 
-export type Auth = {
-  // Certification Type
-  type: 'publickey' | 'token';
-  // The public key in your Allegro Mesh project.
-  publicKey?: string;
-  // api for getting access token
-  endpoint?: string;
+export type DataPacket = {
+  metadata: MetaData;
+  payload: any;
 };
 
-export type ConnectType = 'WebSocket' | 'WebTransport';
-export interface PresenceOption {
-  // Authentication
-  auth?: Auth;
-  type?:ConnectType;
-  // The reconnection interval value.
-  reconnectInterval?: number;
-  // The reconnection attempts value.
-  reconnectAttempts?: number;
-}
+export type IYomo = {
+  entry: (roomId: string) => IRoom;
+  leave: (roomId: string) => void;
+};
+
+type Others = MetaData[];
+
+export type IRoom = {
+  id: string;
+  send<T>(eventName: string, payload: T): void;
+  on<T>(
+    eventName: string,
+    callbackFn: (payload: T, metadata: MetaData) => any
+  ): void;
+  getOthers(): Others;
+  leave(): void;
+};
