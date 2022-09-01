@@ -1,0 +1,74 @@
+{
+  "name": "@yomo/__hug-group",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "author": "LuZhenqian",
+  "module": "dist/hug-group.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/hug-group.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/hug-group.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "dependencies": {
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-typescript": "^8.4.0",
+    "@yomo/presence": "workspace:1.0.0",
+    "autoprefixer": "^10.4.7",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "lit": "^2.3.1",
+    "lit-element": "^3.2.2",
+    "postcss": "^8.4.14",
+    "prettier": "^2.7.1",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tailwindcss": "^3.0.24"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^22.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "typescript": "*"
+  }
+}
