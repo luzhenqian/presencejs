@@ -7,6 +7,7 @@ import {
   PresenceOptions,
 } from './type';
 import { randomId } from './utils';
+import { loadWasm } from './wasm-loader';
 
 export class Presence implements IPresence {
   #url: string;
@@ -17,7 +18,7 @@ export class Presence implements IPresence {
       id: options.id,
     };
     this.#url = options.url;
-    this.#connect();
+    this.#loadWasm().then(this.#connect);
   }
 
   open(channelId: string) {
@@ -45,6 +46,10 @@ export class Presence implements IPresence {
         channel.leave();
       });
     });
+  }
+
+  async #loadWasm() {
+    await loadWasm();
   }
 }
 
