@@ -10,7 +10,7 @@ export type MetaData = {
 
 export type DataPacket = {
   metadata: MetaData;
-  payload: any;
+  payload?: any;
 };
 
 export type PresenceOptions = { url?: string; id?: string } & {

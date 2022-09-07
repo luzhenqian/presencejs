@@ -13,6 +13,7 @@ export class Presence implements IPresence {
   #url: string;
   #metaData: MetaData;
   #channels: Map<string, IChannel> = new Map();
+  #transport: any;
   constructor(options: InternalPresenceOptions) {
     this.#metaData = {
       id: options.id,
@@ -22,7 +23,7 @@ export class Presence implements IPresence {
   }
 
   open(channelId: string) {
-    const channel = new Channel(channelId, this.#metaData);
+    const channel = new Channel(channelId, this.#metaData, this.#transport);
     this.#channels.set(channelId, channel);
     return channel;
   }
@@ -35,13 +36,13 @@ export class Presence implements IPresence {
   }
 
   async #connect() {
-    const transport = new window.WebTransport(this.#url);
+    this.#transport = new window.WebTransport(this.#url);
 
     try {
-      await transport.ready;
+      await this.#transport.ready;
     } catch (e) {}
 
-    transport.closed.then(() => {
+    this.#transport.closed.then(() => {
       this.#channels.forEach((channel) => {
         channel.leave();
       });
