@@ -1,10 +1,10 @@
 export class SendStream {
   constructor(ws: WebSocket) {
     return new Proxy(this, {
-      get(target, prop, receiver) {
+      get(_, prop) {
         if (prop === 'writable') {
           return new WritableStream<Uint8Array>({
-            start(controller) {},
+            start(_) {},
             write(chunk) {
               return new Promise((resolve, reject) => {
                 try {
@@ -16,7 +16,7 @@ export class SendStream {
               });
             },
             close() {},
-            abort(reason) {},
+            abort(_) {},
           });
         }
         return undefined;

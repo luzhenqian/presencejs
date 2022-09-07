@@ -3,7 +3,7 @@ export class ReceiveStream {
     return new ReadableStream({
       start(controller) {
         let timer: any | null = null;
-        const cb = ev => {
+        const cb = (ev: any) => {
           if (timer) {
             clearTimeout(timer);
           }
