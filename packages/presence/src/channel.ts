@@ -1,4 +1,5 @@
 import {
+  ChannelEventSubscribeCallbackFn,
   DataPacket,
   IChannel,
   MetaData,
@@ -9,24 +10,27 @@ import {
 export class Channel implements IChannel {
   #transport: any;
   #metaData: MetaData;
+  #subscribers = new Map<string, ChannelEventSubscribeCallbackFn<any>>();
   id: string;
   constructor(id: string, metadata: MetaData, transport: any) {
     this.id = id;
     this.#metaData = metadata;
     this.#transport = transport;
     this.#broadcast('TOROOM', { metadata: { id } });
+    this.#broadcast('OPEN', { metadata: { id } });
+    this.#read();
   }
   broadcast<T>(eventName: string, payload: T): void {
     this.#broadcast(eventName, this.#getDataPacket(payload));
   }
-  subscribe<T>(
+  async subscribe<T>(
     eventName: string,
-    callbackFn: (payload: T, metadata: { id: string }) => any
-  ): void {
-    throw new Error('Method not implemented.');
+    callbackFn: ChannelEventSubscribeCallbackFn<T>
+  ): Promise<void> {
+    this.#subscribers.set(eventName, callbackFn);
   }
   getOthers(): OthersPromise {
-    return new Others();
+    return new Others(this.#transport);
   }
   leave() {}
   #getDataPacket<T>(payload: T) {
@@ -37,7 +41,7 @@ export class Channel implements IChannel {
   }
   #broadcast(eventName: string, dataPacket: DataPacket) {
     const writer = this.#transport.datagrams.writable.getWriter();
-    writer(
+    writer.write(
       encoder({
         event: eventName,
         data: {
@@ -46,17 +50,42 @@ export class Channel implements IChannel {
         },
       })
     );
+    writer.close();
+  }
+  async #read() {
+    try {
+      const reader = this.#transport.datagrams.readable.getReader();
+      let result = null;
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        console.log(decoder(value));
+        result += decoder(value);
+      }
+      return result;
+    } catch (e) {
+      return;
+    }
   }
 }
 
 class Others extends Promise<MetaData[]> implements OthersPromise {
-  constructor() {
+  #transport: any = null;
+  constructor(transport: any) {
     super((resolve, reject) => {
       // TODO:
+      if (true) return resolve([]);
+      else return reject();
     });
+    this.#transport = transport;
+    // TODO: broadcast
   }
   subscribe(callbackFn: OtherSubscribeCallbackFn) {
-    return () => {};
+    return () => {
+      callbackFn;
+    };
   }
 }
 

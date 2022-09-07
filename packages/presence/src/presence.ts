@@ -12,14 +12,29 @@ import { loadWasm } from './wasm-loader';
 export class Presence implements IPresence {
   #url: string;
   #metaData: MetaData;
+  #connectedResolve: Function | null = null;
+  #connectedReject: Function | null = null;
   #channels: Map<string, IChannel> = new Map();
   #transport: any;
+  #options: InternalPresenceOptions;
   constructor(options: InternalPresenceOptions) {
     this.#metaData = {
       id: options.id,
     };
-    this.#url = options.url;
-    this.#loadWasm().then(this.#connect);
+    this.#options = options;
+    this.#url = this.#formatUrl();
+    this.#loadWasm().then(() => this.#connect());
+  }
+
+  #formatUrl() {
+    return `${this.#options.url}?public_key=${this.#options.publicKey}`;
+  }
+
+  async connected() {
+    return new Promise((resolve, reject) => {
+      this.#connectedResolve = resolve;
+      this.#connectedReject = reject;
+    });
   }
 
   open(channelId: string) {
@@ -35,12 +50,16 @@ export class Presence implements IPresence {
     }
   }
 
-  async #connect() {
+  #connect() {
     this.#transport = new window.WebTransport(this.#url);
 
-    try {
-      await this.#transport.ready;
-    } catch (e) {}
+    this.#transport.ready
+      .then(() => {
+        this.#connectedResolve && this.#connectedResolve(null);
+      })
+      .catch((e: Error) => {
+        this.#connectedReject && this.#connectedReject(e);
+      });
 
     this.#transport.closed.then(() => {
       this.#channels.forEach((channel) => {

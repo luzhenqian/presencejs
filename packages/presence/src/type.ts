@@ -34,12 +34,17 @@ export type OtherSubscribe = (
 ) => OtherUnsubscribe;
 export type OthersPromise = Promise<MetaData[]> & { subscribe: OtherSubscribe };
 
+export type ChannelEventSubscribeCallbackFn<T> = (
+  payload: T,
+  metadata: MetaData
+) => any;
+
 export type IChannel = {
   id: string;
   broadcast<T>(eventName: string, payload: T): void;
   subscribe<T>(
     eventName: string,
-    callbackFn: (payload: T, metadata: MetaData) => any
+    callbackFn: ChannelEventSubscribeCallbackFn<T>
   ): void;
   getOthers(): OthersPromise;
   leave(): void;
