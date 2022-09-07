@@ -1,5 +1,3 @@
-import { Yomo } from './yomo';
+import { Presence, createPresence } from './presence';
 
-export const createYomo = () => {
-  return new Yomo();
-};
+export { Presence, createPresence };

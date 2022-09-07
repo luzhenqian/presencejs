@@ -7,20 +7,34 @@ export type DataPacket = {
   payload: any;
 };
 
-export type IYomo = {
-  entry: (roomId: string) => IRoom;
-  leave: (roomId: string) => void;
+export type PresenceOptions = { id?: string } & {
+  publicKey?: string;
 };
 
-type Others = MetaData[];
+export type InternalPresenceOptions =
+  | { id: string } & {
+      publicKey?: string;
+    };
 
-export type IRoom = {
+export type IPresence = {
+  open: (channelId: string) => IChannel;
+  close: (channelId: string) => void;
+};
+
+export type OtherSubscribeCallbackFn = (metadata: MetaData) => any;
+export type OtherUnsubscribe = Function;
+export type OtherSubscribe = (
+  callbackFn: OtherSubscribeCallbackFn
+) => OtherUnsubscribe;
+export type OthersPromise = Promise<MetaData[]> & { subscribe: OtherSubscribe };
+
+export type IChannel = {
   id: string;
-  send<T>(eventName: string, payload: T): void;
-  on<T>(
+  broadcast<T>(eventName: string, payload: T): void;
+  subscribe<T>(
     eventName: string,
     callbackFn: (payload: T, metadata: MetaData) => any
   ): void;
-  getOthers(): Others;
+  getOthers(): OthersPromise;
   leave(): void;
 };
