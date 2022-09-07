@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    WebTransport: any;
+  }
+}
+
 export type MetaData = {
   id: string;
 };
@@ -7,12 +13,12 @@ export type DataPacket = {
   payload: any;
 };
 
-export type PresenceOptions = { id?: string } & {
+export type PresenceOptions = { url?: string; id?: string } & {
   publicKey?: string;
 };
 
 export type InternalPresenceOptions =
-  | { id: string } & {
+  | { url: string; id: string } & {
       publicKey?: string;
     };
 
