@@ -9,7 +9,7 @@ import {
 import { randomId } from './utils';
 import { loadWasm } from './wasm-loader';
 
-export class Presence implements IPresence {
+export class Presence extends Promise<any> implements IPresence {
   #url: string;
   #metaData: MetaData;
   #connectedResolve: Function | null = null;
@@ -18,6 +18,10 @@ export class Presence implements IPresence {
   #transport: any;
   #options: InternalPresenceOptions;
   constructor(options: InternalPresenceOptions) {
+    super((resolve, reject) => {
+      this.#connectedResolve = resolve;
+      this.#connectedReject = reject;
+    });
     this.#metaData = {
       id: options.id,
     };
@@ -28,13 +32,6 @@ export class Presence implements IPresence {
 
   #formatUrl() {
     return `${this.#options.url}?public_key=${this.#options.publicKey}`;
-  }
-
-  async connected() {
-    return new Promise((resolve, reject) => {
-      this.#connectedResolve = resolve;
-      this.#connectedReject = reject;
-    });
   }
 
   open(channelId: string) {

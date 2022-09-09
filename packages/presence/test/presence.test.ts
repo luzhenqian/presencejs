@@ -14,41 +14,37 @@ globalThis.ReadableStream = streams.ReadableStream;
 
 describe('Presence', () => {
   it('create presence', async () => {
-    const presence = createPresence({
+    const presence = await createPresence({
       url: 'wss://prsc.yomo.dev',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
-    await presence.connected();
+
     expect(presence).toBeDefined();
   });
 
   it('open channel', async () => {
-    const presence = createPresence({
+    const presence = await createPresence({
       url: 'wss://prsc.yomo.dev',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
 
-    await presence.connected();
     const groupHugChannel = presence.open('group-hug');
     expect(groupHugChannel).toBeDefined();
   });
 
   it('get others', async () => {
-    const p1 = createPresence({
+    const p1 = await createPresence({
       url: 'wss://prsc.yomo.dev',
       id: '1',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
-    const p2 = createPresence({
+    const p2 = await createPresence({
       url: 'wss://prsc.yomo.dev',
       id: '2',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
 
-    await p1.connected();
     p1.open('group-hug');
-
-    await p2.connected();
     const groupHugChannel = p2.open('group-hug');
     const others = await groupHugChannel.getOthers();
     // expect(others).toEqual([{ id: '1' }]);
