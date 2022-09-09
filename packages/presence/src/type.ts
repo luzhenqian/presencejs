@@ -8,9 +8,9 @@ export type MetaData = {
   id: string;
 };
 
-export type DataPacket = {
+export type PayloadPacket<T> = {
   metadata: MetaData;
-  payload?: any;
+  payload?: T;
 };
 
 export type PresenceOptions = { url?: string; id?: string } & {
@@ -27,12 +27,12 @@ export type IPresence = {
   close: (channelId: string) => void;
 };
 
-export type OtherSubscribeCallbackFn = (metadata: MetaData) => any;
-export type OtherUnsubscribe = Function;
-export type OtherSubscribe = (
-  callbackFn: OtherSubscribeCallbackFn
-) => OtherUnsubscribe;
-export type OthersPromise = Promise<MetaData[]> & { subscribe: OtherSubscribe };
+export type PeersSubscribeCallbackFn = (metadata: MetaData) => any;
+export type PeersUnsubscribe = Function;
+export type PeersSubscribe = (
+  callbackFn: PeersSubscribeCallbackFn
+) => PeersUnsubscribe;
+export type Peers = { subscribe: PeersSubscribe };
 
 export type ChannelEventSubscribeCallbackFn<T> = (
   payload: T,
@@ -46,6 +46,6 @@ export type IChannel = {
     eventName: string,
     callbackFn: ChannelEventSubscribeCallbackFn<T>
   ): void;
-  getOthers(): OthersPromise;
-  leave(): void;
+  getPeers(): Peers;
+  close(): void;
 };

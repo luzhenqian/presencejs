@@ -1,10 +1,10 @@
 import {
   ChannelEventSubscribeCallbackFn,
-  DataPacket,
+  PayloadPacket,
   IChannel,
   MetaData,
-  OthersPromise,
-  OtherSubscribeCallbackFn,
+  Peers,
+  PeersSubscribeCallbackFn,
 } from './type';
 
 export class Channel implements IChannel {
@@ -29,17 +29,17 @@ export class Channel implements IChannel {
   ): Promise<void> {
     this.#subscribers.set(eventName, callbackFn);
   }
-  getOthers(): OthersPromise {
+  getPeers(): Peers {
     return new Others(this.#transport);
   }
-  leave() {}
+  close() {}
   #getDataPacket<T>(payload: T) {
     return {
       metadata: this.#metaData,
       payload,
     };
   }
-  #broadcast(eventName: string, dataPacket: DataPacket) {
+  #broadcast(eventName: string, dataPacket: PayloadPacket) {
     const writer = this.#transport.datagrams.writable.getWriter();
     writer.write(
       encoder({
@@ -71,7 +71,7 @@ export class Channel implements IChannel {
   }
 }
 
-class Others extends Promise<MetaData[]> implements OthersPromise {
+class Others extends Promise<MetaData[]> implements Peers {
   #transport: any = null;
   constructor(transport: any) {
     super((resolve, reject) => {
@@ -82,7 +82,7 @@ class Others extends Promise<MetaData[]> implements OthersPromise {
     this.#transport = transport;
     // TODO: broadcast
   }
-  subscribe(callbackFn: OtherSubscribeCallbackFn) {
+  subscribe(callbackFn: PeersSubscribeCallbackFn) {
     return () => {
       callbackFn;
     };

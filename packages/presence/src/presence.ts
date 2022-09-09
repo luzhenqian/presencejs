@@ -46,7 +46,7 @@ export class Presence implements IPresence {
   close(channelId: string) {
     const channel = this.#channels.get(channelId);
     if (channel) {
-      channel.leave();
+      channel.close();
     }
   }
 
@@ -63,7 +63,7 @@ export class Presence implements IPresence {
 
     this.#transport.closed.then(() => {
       this.#channels.forEach((channel) => {
-        channel.leave();
+        channel.close();
       });
     });
   }
