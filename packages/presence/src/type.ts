@@ -27,12 +27,12 @@ export type IPresence = {
   close: (channelId: string) => void;
 };
 
-export type PeersSubscribeCallbackFn = (metadata: MetaData) => any;
+export type PeersSubscribeCallbackFn = (peers: MetaData[]) => any;
 export type PeersUnsubscribe = Function;
 export type PeersSubscribe = (
   callbackFn: PeersSubscribeCallbackFn
 ) => PeersUnsubscribe;
-export type Peers = { subscribe: PeersSubscribe };
+export type IPeers = { subscribe: PeersSubscribe };
 
 export type ChannelEventSubscribeCallbackFn<T> = (
   payload: T,
@@ -46,6 +46,6 @@ export type IChannel = {
     eventName: string,
     callbackFn: ChannelEventSubscribeCallbackFn<T>
   ): void;
-  getPeers(): Peers;
+  subscribePeers: PeersSubscribe;
   close(): void;
 };

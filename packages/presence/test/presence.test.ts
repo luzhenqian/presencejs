@@ -46,7 +46,8 @@ describe('Presence', () => {
 
     p1.open('group-hug');
     const groupHugChannel = p2.open('group-hug');
-    const others = await groupHugChannel.getOthers();
+    groupHugChannel.getPeers().subscribe((peers) => {});
+    // const others = await groupHugChannel.getOthers();
     // expect(others).toEqual([{ id: '1' }]);
     throw Error('123');
   });
