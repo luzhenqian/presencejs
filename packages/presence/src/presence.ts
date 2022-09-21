@@ -34,16 +34,16 @@ export class Presence extends Promise<any> implements IPresence {
     return `${this.#options.url}?public_key=${this.#options.publicKey}`;
   }
 
-  open(channelId: string) {
+  joinChannel(channelId: string) {
     const channel = new Channel(channelId, this.#metaData, this.#transport);
     this.#channels.set(channelId, channel);
     return channel;
   }
 
-  close(channelId: string) {
+  leaveChannel(channelId: string) {
     const channel = this.#channels.get(channelId);
     if (channel) {
-      channel.close();
+      channel.leave();
     }
   }
 
@@ -60,7 +60,7 @@ export class Presence extends Promise<any> implements IPresence {
 
     this.#transport.closed.then(() => {
       this.#channels.forEach((channel) => {
-        channel.close();
+        channel.leave();
       });
     });
   }

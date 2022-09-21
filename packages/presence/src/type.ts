@@ -23,8 +23,8 @@ export type InternalPresenceOptions =
     };
 
 export type IPresence = {
-  open: (channelId: string) => IChannel;
-  close: (channelId: string) => void;
+  joinChannel: (channelId: string) => IChannel;
+  leaveChannel: (channelId: string) => void;
 };
 
 export type PeersSubscribeCallbackFn = (peers: MetaData[]) => any;
@@ -47,5 +47,5 @@ export type IChannel = {
     callbackFn: ChannelEventSubscribeCallbackFn<T>
   ): void;
   subscribePeers: PeersSubscribe;
-  close(): void;
+  leave(): void;
 };

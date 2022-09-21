@@ -36,7 +36,7 @@ export class Channel implements IChannel {
     const peers = new Peers(this.#transport, this.#members);
     return peers.subscribe(callbackFn);
   }
-  close() {}
+  leave() {}
   #getDataPacket<T>(payload: T) {
     return {
       metadata: this.#metaData,
