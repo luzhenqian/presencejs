@@ -12,15 +12,18 @@ export class Channel implements IChannel {
   #metaData: MetaData;
   #subscribers = new Map<string, ChannelEventSubscribeCallbackFn<any>>();
   #members: MetaData[] = [];
+  #peers: Peers | null = null;
+  #joinTimestamp: number;
   id: string;
   constructor(id: string, metadata: MetaData, transport: any) {
     this.id = id;
     this.#metaData = metadata;
     this.#transport = transport;
+    this.#joinTimestamp = Date.now()
+    console.log(this.#joinTimestamp);
+    
     this.#broadcast('TOROOM', { metadata: { id } });
-    this.#broadcast('__OPEN__', { metadata: { id } });
-    this.#openHandler();
-    this.#closeHandler();
+    this.#subscribeSignaling();
     this.#read();
   }
   broadcast<T>(eventName: string, payload: T): void {
@@ -33,10 +36,18 @@ export class Channel implements IChannel {
     this.#subscribers.set(eventName, callbackFn);
   }
   subscribePeers(callbackFn: PeersSubscribeCallbackFn) {
-    const peers = new Peers(this.#transport, this.#members);
-    return peers.subscribe(callbackFn);
+    if (!this.#peers) {
+      this.#peers = new Peers(this.#transport, this.#members);
+    }
+    return this.#peers.subscribe(callbackFn);
   }
-  leave() {}
+  leave() {
+    const writer = this.#transport.datagrams.writable.getWriter();
+    writer.write(
+      encoder({ event: 'LEAVE_CHANNEL', metadata: { id: this.id } })
+    );
+    writer.close();
+  }
   #getDataPacket<T>(payload: T) {
     return {
       metadata: this.#metaData,
@@ -48,10 +59,8 @@ export class Channel implements IChannel {
     writer.write(
       encoder({
         event: eventName,
-        data: {
-          id: dataPacket.metadata.id,
-          ...(dataPacket.payload || {}),
-        },
+        metadata: dataPacket.metadata,
+        payload: dataPacket.payload || null,
       })
     );
     writer.close();
@@ -73,9 +82,9 @@ export class Channel implements IChannel {
       return;
     }
   }
-  #openHandler() {
-    // subscribe __OPEN__ event, add members
-    this.subscribe('__OPEN__', (metadata: MetaData) => {
+  #joinHandler() {
+    // subscribe JOIN_CHANNEL event, add members
+    this.subscribe('TOROOM', (_, metadata: MetaData) => {
       if (metadata.id === this.#metaData.id) return;
       const member = this.#members.find((member) => member.id === metadata.id);
       if (!member) {
@@ -84,9 +93,9 @@ export class Channel implements IChannel {
       }
     });
   }
-  #closeHandler() {
-    // subscribe __CLOSE__ event, remove members
-    this.subscribe('__CLOSE__', (metadata: MetaData) => {
+  #leaveHandler() {
+    // subscribe LEAVE_CHANNEL event, remove members
+    this.subscribe('LEAVE_CHANNEL', (_, metadata: MetaData) => {
       if (metadata.id === this.#metaData.id) return;
       const memberIndex = this.#members.findIndex(
         (member) => member.id === metadata.id
@@ -97,6 +106,10 @@ export class Channel implements IChannel {
       }
     });
   }
+  #subscribeSignaling() {
+    this.#joinHandler();
+    this.#leaveHandler();
+  }
 }
 
 class Peers implements IPeers {
@@ -105,6 +118,8 @@ class Peers implements IPeers {
   #callbackFns: PeersSubscribeCallbackFn[] = [];
   constructor(transport: any, members: MetaData[]) {
     this.#transport = transport;
+    console.log(this.#transport);
+    
     this.#members = members;
     // TODO: broadcast
   }

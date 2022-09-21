@@ -22,6 +22,10 @@ export type InternalPresenceOptions =
       publicKey?: string;
     };
 
+export interface CreatePresence {
+  (options: PresenceOptions):Promise<IPresence>
+}
+
 export type IPresence = {
   joinChannel: (channelId: string) => IChannel;
   leaveChannel: (channelId: string) => void;
