@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import Presence from '@yomo/presence/dist/presence.esm.js';
+import Presence from '@yomo/__presence/dist/presence.esm.js';
 import './styles.css';
 
 export type User = {
@@ -11,10 +11,14 @@ export type User = {
 @customElement('hug-group')
 export default class HugGroup extends LitElement {
   @property()
-  user: User = {
-    id: Math.random().toString(),
-    avatar: 'https://avatars0.githubusercontent.com/u/17098?s=460&v=4',
-  };
+  id: string = Math.random().toString();
+  @property({
+    converter: (attrValue: string | null) => {
+      if (attrValue) return attrValue;
+      else return 'https://avatars0.githubusercontent.com/u/17098?s=460&v=4';
+    },
+  })
+  avatar;
   @property()
   users: User[] = [];
   @property()
@@ -27,7 +31,7 @@ export default class HugGroup extends LitElement {
   });
 
   createRenderRoot() {
-    this.users.push(this.user);
+    this.users.push({ id: this.id, avatar: this.avatar });
 
     this.yomo.on('connected', () => {
       console.log('Connected to server: ', this.yomo.host);
@@ -35,16 +39,16 @@ export default class HugGroup extends LitElement {
       this.yomo.toRoom('hug-group');
 
       this.yomo.on('ONLINE', (data) => {
-        if (data.id === this.user.id) return;
+        if (data.id === this.id) return;
 
         if (!this.users.find((user) => user.id === data.id))
           this.users = [...this.users, data];
 
-        this.yomo.send('SYNC', this.user);
+        this.yomo.send('SYNC', { id: this.id, avatar: this.avatar });
       });
 
       this.yomo.on('SYNC', (data) => {
-        if (data.id === this.user.id) return;
+        if (data.id === this.id) return;
 
         if (!this.users.find((user) => user.id === data.id))
           this.users = [...this.users, data];
@@ -55,11 +59,11 @@ export default class HugGroup extends LitElement {
         if (idx !== -1) this.users.splice(idx, 1);
       });
 
-      this.yomo.send('ONLINE', this.user);
+      this.yomo.send('ONLINE', { id: this.id, avatar: this.avatar });
     });
 
     window.onbeforeunload = () => {
-      this.yomo.send('OFFLINE', this.user);
+      this.yomo.send('OFFLINE', { id: this.id, avatar: this.avatar });
       this.yomo.close();
     };
     return this; // turn off shadow dom to access external styles
@@ -73,6 +77,19 @@ export default class HugGroup extends LitElement {
         >
           ${this.users.slice(0, 6).map((user, i) => {
             if (i < 5) {
+              if (user.avatar) {
+                return html`<img
+                  style="transform:
+                translateX(${i * -2}px);
+                z-index:${this.users.length - i};
+                width: 22px;
+                height: 22px;
+                object-fit: contain;
+                "
+                  src=${user.avatar}
+                  alt=${user.id}
+                />`;
+              }
               return html`
                 <svg
                   style="transform: translateX(${i * -2}px);z-index:${this.users
