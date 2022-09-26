@@ -6,6 +6,7 @@ import {
   IPeers,
   PeersSubscribeCallbackFn,
 } from './type';
+import { encode, decode } from "@msgpack/msgpack";
 
 export class Channel implements IChannel {
   #transport: any;
@@ -21,7 +22,7 @@ export class Channel implements IChannel {
     this.#transport = transport;
     this.#joinTimestamp = Date.now()
     console.log(this.#joinTimestamp);
-    
+
     this.#broadcast('TOROOM', { metadata: { id } });
     this.#subscribeSignaling();
     this.#read();
@@ -37,14 +38,14 @@ export class Channel implements IChannel {
   }
   subscribePeers(callbackFn: PeersSubscribeCallbackFn) {
     if (!this.#peers) {
-      this.#peers = new Peers(this.#transport, this.#members);
+      this.#peers = new Peers(this.#transport);
     }
     return this.#peers.subscribe(callbackFn);
   }
   leave() {
     const writer = this.#transport.datagrams.writable.getWriter();
     writer.write(
-      encoder({ event: 'LEAVE_CHANNEL', metadata: { id: this.id } })
+      encode({ event: 'LEAVE_CHANNEL', metadata: { id: this.id } })
     );
     writer.close();
   }
@@ -57,7 +58,7 @@ export class Channel implements IChannel {
   #broadcast<T>(eventName: string, dataPacket: PayloadPacket<T>) {
     const writer = this.#transport.datagrams.writable.getWriter();
     writer.write(
-      encoder({
+      encode({
         event: eventName,
         metadata: dataPacket.metadata,
         payload: dataPacket.payload || null,
@@ -68,14 +69,14 @@ export class Channel implements IChannel {
   async #read() {
     try {
       const reader = this.#transport.datagrams.readable.getReader();
-      let result = null;
+      let result: any = null;
       while (true) {
         const { value, done } = await reader.read();
         if (done) {
           break;
         }
-        console.log(decoder(value));
-        result += decoder(value);
+        console.log(decode(value));
+        result += decode(value);
       }
       return result;
     } catch (e) {
@@ -90,6 +91,7 @@ export class Channel implements IChannel {
       if (!member) {
         // add members
         this.#members.push(this.#metaData);
+        this.#peers?.trigger(this.#members);
       }
     });
   }
@@ -104,6 +106,7 @@ export class Channel implements IChannel {
         // remove members
         this.#members.splice(memberIndex, 1);
       }
+      this.#peers?.trigger(this.#members);
     });
   }
   #subscribeSignaling() {
@@ -114,14 +117,10 @@ export class Channel implements IChannel {
 
 class Peers implements IPeers {
   #transport: any = null;
-  #members: MetaData[] = [];
   #callbackFns: PeersSubscribeCallbackFn[] = [];
-  constructor(transport: any, members: MetaData[]) {
+  constructor(transport: any) {
     this.#transport = transport;
     console.log(this.#transport);
-    
-    this.#members = members;
-    // TODO: broadcast
   }
   subscribe(callbackFn: PeersSubscribeCallbackFn) {
     this.#callbackFns.push(callbackFn);
@@ -132,18 +131,9 @@ class Peers implements IPeers {
       }
     };
   }
-  trigger() {
+  trigger(members: MetaData[]) {
     this.#callbackFns.forEach((callbackFn) => {
-      callbackFn(this.#members);
+      callbackFn(members);
     });
   }
-}
-
-function encoder(data: any) {
-  return (window as any).encode(0x11, data).buffer;
-}
-
-function decoder(data: any) {
-  const uint8buf = new Uint8Array(data);
-  return (window as any).decode(0x11, uint8buf);
 }

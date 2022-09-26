@@ -18,21 +18,20 @@ describe('Presence', () => {
       url: 'wss://prsc.yomo.dev',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
-
     expect(presence).toBeDefined();
   });
 
-  it('open channel', async () => {
+  it('join channel', async () => {
     const presence = await createPresence({
       url: 'wss://prsc.yomo.dev',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
 
-    const groupHugChannel = presence.open('group-hug');
+    const groupHugChannel = presence.joinChannel('group-hug');
     expect(groupHugChannel).toBeDefined();
   });
 
-  it('get others', async () => {
+  it('subscribePeers', async () => {
     const p1 = await createPresence({
       url: 'wss://prsc.yomo.dev',
       id: '1',
@@ -44,11 +43,11 @@ describe('Presence', () => {
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
 
-    p1.open('group-hug');
-    const groupHugChannel = p2.open('group-hug');
-    groupHugChannel.getPeers().subscribe((peers) => {});
-    // const others = await groupHugChannel.getOthers();
-    // expect(others).toEqual([{ id: '1' }]);
-    throw Error('123');
+    p1.joinChannel('group-hug');
+    const groupHugChannel = p2.joinChannel('group-hug');
+    groupHugChannel.subscribePeers((peers: any) => {
+      console.log(peers);
+      expect(peers).toEqual([{ id: '1' }]);
+    });
   });
 });

@@ -8,7 +8,6 @@ import {
   PresenceOptions,
 } from './type';
 import { randomId } from './utils';
-import { loadWasm } from './wasm-loader';
 
 export class Presence implements IPresence {
   #url: string;
@@ -25,15 +24,15 @@ export class Presence implements IPresence {
       id: options.id,
     };
     this.#options = options;
-    this.#url = this.#formatUrl();
-    this.#loadWasm().then(() => {
-      this.#connect()
-    })
+    // FIXME: this is dev only
+    this.#url = this.#options.url;
+    // this.#url = this.#formatUrl();
+    this.#connect()
   }
 
-  #formatUrl() {
-    return `${this.#options.url}?public_key=${this.#options.publicKey}`;
-  }
+  // #formatUrl() {
+  //   return `${this.#options.url}?public_key=${this.#options.publicKey}`;
+  // }
 
   onReady(callbackFn: Function) {
     this.#onReadyCallbackFn = callbackFn
@@ -76,15 +75,11 @@ export class Presence implements IPresence {
       });
     });
   }
-
-  async #loadWasm() {
-    await loadWasm();
-  }
 }
 
 export const createPresence:CreatePresence= async (options: PresenceOptions) => {
   return new Promise(
-    (resolve, reject) => {
+    (resolve) => {
       let id = options?.id || randomId();
       let url = options?.url || 'https://prsc.yomo.dev';
       const internalOptions: InternalPresenceOptions = { ...options, id, url };
@@ -92,11 +87,11 @@ export const createPresence:CreatePresence= async (options: PresenceOptions) => 
       presence.onReady(() => {
         resolve(presence)
       })
-      presence.onClosed(() => {
-        reject('closed')
-      })
-      presence.onError((e: any) => {
-        reject(e)
-      })
+      // presence.onClosed(() => {
+      //   reject('closed')
+      // })
+      // presence.onError((e: any) => {
+      //   reject(e)
+      // })
     })
 };
