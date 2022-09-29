@@ -4,12 +4,12 @@ declare global {
   }
 }
 
-export type MetaData = {
+export type Metadata = {
   id: string;
 };
 
 export type PayloadPacket<T> = {
-  metadata: MetaData;
+  metadata: Metadata;
   payload?: T;
 };
 
@@ -17,21 +17,20 @@ export type PresenceOptions = { url?: string; id?: string } & {
   publicKey?: string;
 };
 
-export type InternalPresenceOptions =
-  | { url: string; id: string } & {
-      publicKey?: string;
-    };
+export type InternalPresenceOptions = { url: string; id: string } & {
+  publicKey?: string;
+};
 
 export interface CreatePresence {
-  (options: PresenceOptions):Promise<IPresence>
+  (options: PresenceOptions): Promise<IPresence>;
 }
 
 export type IPresence = {
-  joinChannel: (channelId: string) => IChannel;
+  joinChannel: (channelId: string, metadata: Metadata) => IChannel;
   leaveChannel: (channelId: string) => void;
 };
 
-export type PeersSubscribeCallbackFn = (peers: MetaData[]) => any;
+export type PeersSubscribeCallbackFn = (peers: Metadata[]) => any;
 export type PeersUnsubscribe = Function;
 export type PeersSubscribe = (
   callbackFn: PeersSubscribeCallbackFn
@@ -40,7 +39,7 @@ export type IPeers = { subscribe: PeersSubscribe };
 
 export type ChannelEventSubscribeCallbackFn<T> = (
   payload: T,
-  metadata: MetaData
+  metadata: Metadata
 ) => any;
 
 export type IChannel = {
@@ -53,3 +52,11 @@ export type IChannel = {
   subscribePeers: PeersSubscribe;
   leave(): void;
 };
+
+export interface Signaling {
+  t: 'control' | 'data';
+  op?: 'channel_join' | 'peer_online' | 'peer_state';
+  p?: string;
+  c: string;
+  pl?: ArrayBuffer;
+}

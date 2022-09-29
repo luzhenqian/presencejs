@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
+    "start:tsup": "tsup ./src/index.ts --dts --watch",
     "build": "tsdx build",
     "build:tsup": "tsup ./src/index.ts --dts",
     "test": "tsdx test --detectOpenHandles",

@@ -4,14 +4,14 @@ import {
   IChannel,
   InternalPresenceOptions,
   IPresence,
-  MetaData,
+  Metadata,
   PresenceOptions,
 } from './type';
 import { randomId } from './utils';
 
 export class Presence implements IPresence {
   #url: string;
-  #metaData: MetaData;
+  #metadata: Metadata;
   #channels: Map<string, IChannel> = new Map();
   #transport: any;
   #options: InternalPresenceOptions;
@@ -20,19 +20,17 @@ export class Presence implements IPresence {
   #onClosedCallbackFn: Function = () => { };
 
   constructor(options: InternalPresenceOptions) {
-    this.#metaData = {
+    this.#metadata = {
       id: options.id,
     };
     this.#options = options;
-    // FIXME: this is dev only
-    this.#url = this.#options.url;
-    // this.#url = this.#formatUrl();
+    this.#url = this.#formatUrl();
     this.#connect()
   }
 
-  // #formatUrl() {
-  //   return `${this.#options.url}?public_key=${this.#options.publicKey}`;
-  // }
+  #formatUrl() {
+    return `${this.#options.url}?publickey=${this.#options.publicKey}&id=${this.#metadata.id}`;
+  }
 
   onReady(callbackFn: Function) {
     this.#onReadyCallbackFn = callbackFn
@@ -44,8 +42,12 @@ export class Presence implements IPresence {
     this.#onClosedCallbackFn = callbackFn
   }
 
-  joinChannel(channelId: string) {
-    const channel = new Channel(channelId, this.#metaData, this.#transport);
+  joinChannel(channelId: string, metadata: Metadata) {
+    this.#metadata = {
+      ...this.#metadata,
+      ...metadata
+    }
+    const channel = new Channel(channelId, this.#metadata, this.#transport);
     this.#channels.set(channelId, channel);
     return channel;
   }
@@ -77,7 +79,7 @@ export class Presence implements IPresence {
   }
 }
 
-export const createPresence:CreatePresence= async (options: PresenceOptions) => {
+export const createPresence: CreatePresence = async (options: PresenceOptions) => {
   return new Promise(
     (resolve) => {
       let id = options?.id || randomId();
