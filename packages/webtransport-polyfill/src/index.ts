@@ -24,6 +24,7 @@ export class WebTransport {
     this.ready = new Promise((resolve, reject) => {
       url = url.replace(/^http/, 'ws');
       this.#ws = new WebSocket(url);
+      this.#ws.binaryType = 'arraybuffer';
       this.#ws.addEventListener('open', () => {
         resolve(null);
       }),

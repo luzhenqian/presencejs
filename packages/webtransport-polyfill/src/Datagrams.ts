@@ -29,10 +29,8 @@ export class DataGrams {
                   clearTimeout(timer);
                 }
                 controller.enqueue(ev.data);
-                timer = setTimeout(
-                  () => ws.removeEventListener('message', cb),
-                  1_000
-                );
+                // controller.close();
+                // ws.removeEventListener('message', cb);
               };
               ws.addEventListener('message', cb);
             },
