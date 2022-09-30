@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import Presence from '@yomo/__presence/dist/presence.esm.js';
+import { createPresence } from '@yomo/presence/dist/index';
 import './styles.css';
 
 export type User = {
@@ -22,53 +22,46 @@ export default class HugGroup extends LitElement {
   @property()
   users: User[] = [];
   @property()
-  yomo = new Presence('https://prsc.yomo.dev', {
-    // type: 'WebSocket',
-    auth: {
-      type: 'publickey',
-      publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
-    },
-  });
+  channel = null;
 
   createRenderRoot() {
-    this.users.push({ id: this.id, avatar: this.avatar });
-
-    this.yomo.on('connected', () => {
-      console.log('Connected to server: ', this.yomo.host);
-
-      this.yomo.toRoom('hug-group');
-
-      this.yomo.on('ONLINE', (data) => {
-        if (data.id === this.id) return;
-
-        if (!this.users.find((user) => user.id === data.id))
-          this.users = [...this.users, data];
-
-        this.yomo.send('SYNC', { id: this.id, avatar: this.avatar });
+    createPresence({
+      url: 'https://lo.allegrocloud.io:8443/v1/ws',
+      publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
+    }).then((yomo) => {
+      this.channel = yomo.joinChannel('hug-group', {
+        id: this.id,
+        avatar: this.avatar,
       });
 
-      this.yomo.on('SYNC', (data) => {
-        if (data.id === this.id) return;
+      this.channel.subscribePeers((peers) => {
+        console.log(peers, 'peers');
 
-        if (!this.users.find((user) => user.id === data.id))
-          this.users = [...this.users, data];
+        for (const peer of peers) {
+          if (peer.id !== this.id) {
+            const user = this.users.find(({ id }) => id === peer.id);
+            console.log(user, 'user');
+
+            if (user) {
+              user.avatar = peer.avatar;
+            } else {
+              this.users = [
+                { id: this.id, avatar: this.avatar },
+                ...this.users,
+                peer,
+              ];
+              console.log(this.users, 'users push');
+            }
+          }
+        }
       });
-
-      this.yomo.on('OFFLINE', (data) => {
-        const idx = this.users.findIndex((user) => user.id === data.id);
-        if (idx !== -1) this.users.splice(idx, 1);
-      });
-
-      this.yomo.send('ONLINE', { id: this.id, avatar: this.avatar });
     });
-
-    window.onbeforeunload = () => {
-      this.yomo.send('OFFLINE', { id: this.id, avatar: this.avatar });
-      this.yomo.close();
-    };
     return this; // turn off shadow dom to access external styles
   }
   render() {
+    console.log('render', this.users);
+
+    if (this.channel === null) return null;
     return html`
       <div class="flex items-center">
         <div
