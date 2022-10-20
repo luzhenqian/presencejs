@@ -28,6 +28,7 @@ export default class HugGroup extends LitElement {
     createPresence({
       url: 'https://lo.allegrocloud.io:8443/v1/ws',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
+      id: this.id,
     }).then((yomo) => {
       this.channel = yomo.joinChannel('hug-group', {
         id: this.id,
@@ -35,32 +36,16 @@ export default class HugGroup extends LitElement {
       });
 
       this.channel.subscribePeers((peers) => {
-        console.log(peers, 'peers');
-
-        for (const peer of peers) {
-          if (peer.id !== this.id) {
-            const user = this.users.find(({ id }) => id === peer.id);
-            console.log(user, 'user');
-
-            if (user) {
-              user.avatar = peer.avatar;
-            } else {
-              this.users = [
-                { id: this.id, avatar: this.avatar },
-                ...this.users,
-                peer,
-              ];
-              console.log(this.users, 'users push');
-            }
-          }
-        }
+        this.users = [{ id: this.id, avatar: this.avatar }, ...peers];
       });
+      this.users = [{ id: this.id, avatar: this.avatar }];
+    });
+    window.addEventListener('beforeunload', () => {
+      this.channel.leave();
     });
     return this; // turn off shadow dom to access external styles
   }
   render() {
-    console.log('render', this.users);
-
     if (this.channel === null) return null;
     return html`
       <div class="flex items-center">
@@ -78,6 +63,7 @@ export default class HugGroup extends LitElement {
                 width: 22px;
                 height: 22px;
                 object-fit: contain;
+                border-radius: 50%;
                 "
                   src=${user.avatar}
                   alt=${user.id}

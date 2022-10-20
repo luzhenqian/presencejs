@@ -15,9 +15,9 @@ export class Presence implements IPresence {
   #channels: Map<string, IChannel> = new Map();
   #transport: any;
   #options: InternalPresenceOptions;
-  #onReadyCallbackFn: Function = () => { };
-  #onErrorCallbackFn: Function = () => { };
-  #onClosedCallbackFn: Function = () => { };
+  #onReadyCallbackFn: Function = () => {};
+  #onErrorCallbackFn: Function = () => {};
+  #onClosedCallbackFn: Function = () => {};
 
   constructor(options: InternalPresenceOptions) {
     this.#metadata = {
@@ -25,28 +25,30 @@ export class Presence implements IPresence {
     };
     this.#options = options;
     this.#url = this.#formatUrl();
-    this.#connect()
+    this.#connect();
   }
 
   #formatUrl() {
-    return `${this.#options.url}?publickey=${this.#options.publicKey}&id=${this.#metadata.id}`;
+    return `${this.#options.url}?publickey=${this.#options.publicKey}&id=${
+      this.#metadata.id
+    }`;
   }
 
   onReady(callbackFn: Function) {
-    this.#onReadyCallbackFn = callbackFn
+    this.#onReadyCallbackFn = callbackFn;
   }
   onError(callbackFn: Function) {
-    this.#onErrorCallbackFn = callbackFn
+    this.#onErrorCallbackFn = callbackFn;
   }
   onClosed(callbackFn: Function) {
-    this.#onClosedCallbackFn = callbackFn
+    this.#onClosedCallbackFn = callbackFn;
   }
 
   joinChannel(channelId: string, metadata: Metadata) {
     this.#metadata = {
       ...this.#metadata,
-      ...metadata
-    }
+      ...metadata,
+    };
     const channel = new Channel(channelId, this.#metadata, this.#transport);
     this.#channels.set(channelId, channel);
     return channel;
@@ -64,7 +66,7 @@ export class Presence implements IPresence {
 
     this.#transport.ready
       .then(() => {
-        this.#onReadyCallbackFn()
+        this.#onReadyCallbackFn();
       })
       .catch((e: Error) => {
         this.#onErrorCallbackFn(e);
@@ -79,21 +81,22 @@ export class Presence implements IPresence {
   }
 }
 
-export const createPresence: CreatePresence = async (options: PresenceOptions) => {
-  return new Promise(
-    (resolve) => {
-      let id = options?.id || randomId();
-      let url = options?.url || 'https://prsc.yomo.dev';
-      const internalOptions: InternalPresenceOptions = { ...options, id, url };
-      const presence = new Presence(internalOptions);
-      presence.onReady(() => {
-        resolve(presence)
-      })
-      // presence.onClosed(() => {
-      //   reject('closed')
-      // })
-      // presence.onError((e: any) => {
-      //   reject(e)
-      // })
-    })
+export const createPresence: CreatePresence = async (
+  options: PresenceOptions
+) => {
+  return new Promise((resolve) => {
+    let id = options?.id || randomId();
+    let url = options?.url || 'https://prsc.yomo.dev';
+    const internalOptions: InternalPresenceOptions = { ...options, id, url };
+    const presence = new Presence(internalOptions);
+    presence.onReady(() => {
+      resolve(presence);
+    });
+    // presence.onClosed(() => {
+    //   reject('closed')
+    // })
+    // presence.onError((e: any) => {
+    //   reject(e)
+    // })
+  });
 };

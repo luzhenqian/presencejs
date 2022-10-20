@@ -17,7 +17,14 @@
     </style>
   </head>
   <body>
-    <hug-group avatar="https://lit.dev/images/logo.svg"></hug-group>
+    <hug-group></hug-group>
     <script type="module" src="bundle.js"></script>
+    <script>
+      const hugGroup = document.querySelector('hug-group');
+      const id = (Math.random() * 10).toString();
+      hugGroup.setAttribute('id', id);
+      hugGroup.setAttribute('avatar', `https://robohash.org/${id}`);
+      location.hash = id;
+    </script>
   </body>
 </html>

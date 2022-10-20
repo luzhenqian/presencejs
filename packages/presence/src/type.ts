@@ -6,6 +6,7 @@ declare global {
 
 export type Metadata = {
   id: string;
+  [key: string]: any;
 };
 
 export type PayloadPacket<T> = {
@@ -50,12 +51,13 @@ export type IChannel = {
     callbackFn: ChannelEventSubscribeCallbackFn<T>
   ): void;
   subscribePeers: PeersSubscribe;
+  updateMetadata: (metadata: Metadata) => void;
   leave(): void;
 };
 
 export interface Signaling {
   t: 'control' | 'data';
-  op?: 'channel_join' | 'peer_online' | 'peer_state';
+  op?: 'channel_join' | 'peer_online' | 'peer_state' | 'peer_offline';
   p?: string;
   c: string;
   pl?: ArrayBuffer;

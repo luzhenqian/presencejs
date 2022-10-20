@@ -7,9 +7,9 @@ import {
   PeersSubscribeCallbackFn,
   Signaling,
 } from './type';
-import { encode as msgPackEncode, decode } from "@msgpack/msgpack";
+import { encode as msgPackEncode, decode } from '@msgpack/msgpack';
 
-const signalingEncode = (data: Signaling) => msgPackEncode(data)
+const signalingEncode = (data: Signaling) => msgPackEncode(data);
 
 export class Channel implements IChannel {
   #transport: any;
@@ -23,10 +23,10 @@ export class Channel implements IChannel {
     this.id = id;
     this.#metadata = metadata;
     this.#transport = transport;
-    this.#joinTimestamp = Date.now()
+    this.#joinTimestamp = Date.now();
     this.#joinTimestamp;
     this.#read();
-    this.#joinChannel()
+    this.#joinChannel();
   }
   broadcast<T>(eventName: string, payload: T): void {
     this.#broadcast(eventName, this.#getDataPacket<T>(payload));
@@ -45,10 +45,22 @@ export class Channel implements IChannel {
   }
   leave() {
     const writer = this.#transport.datagrams.writable.getWriter();
-    // writer.write(
-    //   encode({ event: 'LEAVE_CHANNEL', metadata: { id: this.id } })
-    // );
+    writer.write(
+      msgPackEncode({ t: 'control', op: 'peer_offline', c: this.id })
+    );
     writer.close();
+  }
+  updateMetadata(metadata: Metadata) {
+    this.#metadata = metadata;
+    this.#write(
+      signalingEncode({
+        t: 'control',
+        op: 'peer_state',
+        c: this.id,
+        p: this.#metadata.id,
+        pl: msgPackEncode(this.#metadata),
+      })
+    );
   }
   #joinChannel() {
     this.#write(
@@ -74,7 +86,7 @@ export class Channel implements IChannel {
         c: this.id,
         pl: msgPackEncode({
           event: eventName,
-          ...dataPacket.payload
+          ...dataPacket.payload,
         }),
       })
     );
@@ -90,22 +102,32 @@ export class Channel implements IChannel {
       const reader = this.#transport.datagrams.readable.getReader();
       while (true) {
         const { value } = await reader.read();
-        const data = new Uint8Array(value)
+        const data = new Uint8Array(value);
         const signaling: Signaling = decode(data) as Signaling;
         if (signaling.t === 'control') {
-          if (signaling.op === 'peer_online') {
-            this.#online()
-            this.#handleOnline((signaling.p!))
+          console.log(signaling.op, signaling.p);
+          if (signaling.op === 'channel_join') {
+            this.#online();
+            this.#syncState();
             continue;
           }
+          if (signaling.op === 'peer_online') {
+            this.#handleOnline(signaling.p!);
+            continue;
+          }
+          if (signaling.op === 'peer_offline') {
+            this.#offline(signaling.p!);
+            continue;
+          }
+
           if (signaling.op === 'peer_state') {
-            this.#handleSync(decode(signaling.pl!))
+            this.#handleSync(decode(signaling.pl!));
             continue;
           }
         } else if (signaling.t === 'data') {
           const { event, ...payload } = decode(signaling.pl!) as any;
           if (this.#subscribers.has(event)) {
-            this.#subscribers.get(event)!(payload, { id: signaling.p! })
+            this.#subscribers.get(event)!(payload, { id: signaling.p! });
           }
         }
       }
@@ -116,23 +138,33 @@ export class Channel implements IChannel {
   }
   #handleOnline(id: string) {
     if (id !== this.#metadata.id) {
-      const idx = this.#members.findIndex(member => member.id === id)
+      const idx = this.#members.findIndex((member) => member.id === id);
       if (idx > -1) {
-        this.#members[idx] = { id }
+        this.#members[idx] = { id };
       } else {
-        this.#members.push({ id })
+        this.#members.push({ id });
       }
+      this.#syncState();
       this.#peers?.trigger(this.#members);
     }
   }
   #handleSync(payload: any) {
     if (payload.id !== this.#metadata.id) {
-      const idx = this.#members.findIndex(member => member.id === payload.id)
-      if (idx > -1) {
-        this.#members[idx] = payload
-      } else {
+      const idx = this.#members.findIndex((member) => {
+        console.log(
+          String(member.id) === String(payload.id),
+          member.id,
+          payload.id
+        );
 
-        this.#members.push(payload)
+        return String(member.id) === String(payload.id);
+      });
+      console.log('idx:', idx, this.#members, payload.id);
+
+      if (idx > -1) {
+        this.#members[idx] = payload;
+      } else {
+        this.#members.push(payload);
       }
       this.#peers?.trigger(this.#members);
     }
@@ -141,12 +173,36 @@ export class Channel implements IChannel {
     this.#write(
       signalingEncode({
         t: 'control',
+        op: 'peer_online',
+        c: this.id,
+        p: this.#metadata.id,
+      })
+    );
+  }
+  #syncState() {
+    this.#write(
+      signalingEncode({
+        t: 'control',
         op: 'peer_state',
         c: this.id,
         p: this.#metadata.id,
-        pl: msgPackEncode(this.#metadata)
+        pl: msgPackEncode(this.#metadata),
       })
     );
+  }
+  #offline(id: string) {
+    if (id !== this.#metadata.id) {
+      const idx = this.#members.findIndex((member) => {
+        return member.id === id;
+      });
+
+      if (idx > -1) {
+        this.#members.splice(idx, 1);
+      }
+      console.log(this.#members.length, 'ccc');
+
+      this.#peers?.trigger(this.#members);
+    }
   }
 }
 
@@ -155,7 +211,7 @@ class Peers implements IPeers {
   #callbackFns: PeersSubscribeCallbackFn[] = [];
   constructor(transport: any) {
     this.#transport = transport;
-    this.#transport
+    this.#transport;
   }
   subscribe(callbackFn: PeersSubscribeCallbackFn) {
     this.#callbackFns.push(callbackFn);
