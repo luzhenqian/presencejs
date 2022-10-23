@@ -1,12 +1,14 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { Provider } from '../../../packages/presence-react/dist/index'
+import '../../../packages/webtransport-polyfill/dist/index';
 import React from 'react';
-import "/Users/luzhenqian/Work/xile/presencejs/packages/dev-tools/dist/index.js"
+import type { AppProps } from 'next/app';
+import { ChannelProvider, id } from '../libs/presence.config';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Provider host="https://prsc.yomo.dev" auth={{type:'publickey', publicKey:'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA' }} type="WebSocket"><Component {...pageProps} /></Provider>
-  // return <Provider host="https://prsc.yomo.dev" auth={{type:'token', endpoint:'/api/presence-auth'}} type="WebSocket"><Component {...pageProps} /></Provider>
+  return (
+    <ChannelProvider id="test-channel" initialState={{ id, name: '' }}>
+      <Component {...pageProps} />
+    </ChannelProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
