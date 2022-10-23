@@ -1,7 +1,23 @@
-export interface PresenceHook {
-  <T>(roomName: string): {
-    self: T;
-    setSelf(newSelf: T): void;
-    peers: T[];
+import { IPresence } from '@yomo/presence';
+import React from 'react';
+
+export type PresenceContextValue<R = any> = {
+  [key in string]: R;
+};
+
+// TODO: host auth type ...
+export interface ChannelProviderProps {
+  id: string;
+  initialState?: any;
+  children: React.ReactNode;
+}
+
+export interface CreateChannelContext {
+  (presence: Promise<IPresence>): {
+    ChannelProvider: React.FC<ChannelProviderProps>;
+    Suspense: React.FC<any>;
+    usePeers: () => any[];
+    useMyState: () => any;
+    useUpdateMyState: Function;
   };
 }

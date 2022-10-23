@@ -1,2 +1,3 @@
+import createChannelContext from './createChannelContext';
 
-export * from './exports'
+export { createChannelContext };
