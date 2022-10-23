@@ -105,7 +105,7 @@ export class Channel implements IChannel {
         const data = new Uint8Array(value);
         const signaling: Signaling = decode(data) as Signaling;
         if (signaling.t === 'control') {
-          console.log(signaling.op, signaling.p);
+          console.log(signaling.op, signaling.p, signaling.pl);
           if (signaling.op === 'channel_join') {
             this.#online();
             this.#syncState();
@@ -121,7 +121,10 @@ export class Channel implements IChannel {
           }
 
           if (signaling.op === 'peer_state') {
-            this.#handleSync(decode(signaling.pl!));
+            this.#handleSync({
+              id: signaling.p,
+              ...(decode(signaling.pl!) as any),
+            });
             continue;
           }
         } else if (signaling.t === 'data') {

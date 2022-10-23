@@ -1,3 +1,4 @@
 import { Presence, createPresence } from './presence';
+import { IChannel, IPresence } from './type';
 
-export { Presence, createPresence };
+export { Presence, createPresence, IChannel, IPresence };

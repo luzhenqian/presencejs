@@ -93,10 +93,10 @@ export const createPresence: CreatePresence = async (
       resolve(presence);
     });
     // presence.onClosed(() => {
-    //   reject('closed')
-    // })
+    //   reject('closed');
+    // });
     // presence.onError((e: any) => {
-    //   reject(e)
-    // })
+    //   reject(e);
+    // });
   });
 };
