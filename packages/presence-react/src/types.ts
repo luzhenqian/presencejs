@@ -5,7 +5,6 @@ export type PresenceContextValue<R = any> = {
   [key in string]: R;
 };
 
-// TODO: host auth type ...
 export interface ChannelProviderProps {
   id: string;
   initialState?: any;

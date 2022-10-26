@@ -24,11 +24,32 @@ export class Presence implements IPresence {
       id: options.id,
     };
     this.#options = options;
-    this.#url = this.#formatUrl();
-    this.#connect();
+    (async () => {
+      this.#url = await this.#formatUrl();
+      this.#connect();
+    })();
   }
 
-  #formatUrl() {
+  async #formatUrl() {
+    if ('publicKey' in this.#options) {
+      return this.#formatUrlWithPublicKey();
+    } else if (
+      'appId' in this.#options &&
+      'appSecret' in this.#options &&
+      'endpoint' in this.#options
+    ) {
+      return await this.#formatUrlWithIdAndSecret();
+    }
+    throw new Error('Invalid options');
+  }
+
+  async #formatUrlWithIdAndSecret() {
+    const response = await fetch(this.#options.endpoint as string);
+    const data = await response.json();
+    return `${this.#options.url}?token=${data.token}&id=${this.#metadata.id}`;
+  }
+
+  #formatUrlWithPublicKey() {
     return `${this.#options.url}?publickey=${this.#options.publicKey}&id=${
       this.#metadata.id
     }`;

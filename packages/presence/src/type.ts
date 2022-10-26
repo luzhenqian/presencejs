@@ -14,12 +14,22 @@ export type PayloadPacket<T> = {
   payload?: T;
 };
 
-export type PresenceOptions = { url?: string; id?: string } & {
+export type PresenceOptions = {
+  url?: string;
+  id?: string;
   publicKey?: string;
+  appId?: string;
+  appSecret?: string;
+  endpoint?: string;
 };
 
-export type InternalPresenceOptions = { url: string; id: string } & {
+export type InternalPresenceOptions = {
+  url: string;
+  id: string;
   publicKey?: string;
+  appId?: string;
+  appSecret?: string;
+  endpoint?: string;
 };
 
 export interface CreatePresence {
