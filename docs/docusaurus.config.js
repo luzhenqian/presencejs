@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Presence',
-  tagline: '开源、点对点传输的即时通讯系统',
+  tagline: '通过参考文档、教程、视频和实际动手编写代码的方式来学习 Presence，创建出您自己的实时应用程序。',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',

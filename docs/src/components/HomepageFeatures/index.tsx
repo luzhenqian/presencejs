@@ -17,21 +17,21 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: <>A window.WebTransport JavaScript polyfill.</>,
     color: '#2E8555',
-    url: '/docs/webtransport-polyfill',
+    url: '/docs/webtransport-polyfill/intro',
   },
   {
     title: 'Presence',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: <>2</>,
     color: '#D0372D',
-    url: '/docs/presence',
+    url: '/docs/presence/intro',
   },
   {
     title: 'Presence React',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: <>1</>,
     color: '#6a737d',
-    url: '/docs/presence-react',
+    url: '/docs/presence-react/intro',
   },
 ];
 
@@ -47,7 +47,7 @@ function Feature({ title, Svg, description, color, url }: FeatureItem) {
         <Svg className={styles.featureSvg} role="img" />
       </div>
       <div className="text--center padding-horiz--md">
-        <Link href={url}>
+        <Link to={url}>
           <h3 className="text-2xl">{title}</h3>
         </Link>
         <p>{description}</p>
