@@ -38,9 +38,7 @@ const FeatureList: FeatureItem[] = [
 function Feature({ title, Svg, description, color, url }: FeatureItem) {
   return (
     <div
-      className={
-        'flex flex-col items-center cursor-pointer hover:border-1 rounded-b-md'
-      }
+      className={'flex flex-col items-center cursor-pointer hover:border-2 flex-1'}
       style={{
         borderBottom: `8px solid ${color}`,
       }}
@@ -50,7 +48,7 @@ function Feature({ title, Svg, description, color, url }: FeatureItem) {
       </div>
       <div className="text--center padding-horiz--md">
         <Link href={url}>
-          <h3 className='text-2xl'>{title}</h3>
+          <h3 className="text-2xl">{title}</h3>
         </Link>
         <p>{description}</p>
       </div>
@@ -62,7 +60,7 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className="flex justify-between">
+        <div className="flex justify-center w-auto border">
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
