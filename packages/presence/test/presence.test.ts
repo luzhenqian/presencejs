@@ -27,7 +27,7 @@ describe('Presence', () => {
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
 
-    const groupHugChannel = presence.joinChannel('group-hug');
+    const groupHugChannel = presence.joinChannel('group-hug', { id: '123' });
     expect(groupHugChannel).toBeDefined();
   });
 
@@ -43,8 +43,8 @@ describe('Presence', () => {
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
     });
 
-    p1.joinChannel('group-hug');
-    const groupHugChannel = p2.joinChannel('group-hug');
+    p1.joinChannel('group-hug', { id: 'p1' });
+    const groupHugChannel = p2.joinChannel('group-hug', { id: 'p2' });
     groupHugChannel.subscribePeers((peers: any) => {
       console.log(peers);
       expect(peers).toEqual([{ id: '1' }]);

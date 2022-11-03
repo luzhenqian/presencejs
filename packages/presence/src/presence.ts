@@ -1,6 +1,5 @@
 import { Channel } from './channel';
 import {
-  CreatePresence,
   IChannel,
   InternalPresenceOptions,
   IPresence,
@@ -10,7 +9,7 @@ import {
 import { randomId } from './utils';
 
 export class Presence implements IPresence {
-  #url: string;
+  #url: string = '';
   #metadata: Metadata;
   #channels: Map<string, IChannel> = new Map();
   #transport: any;
@@ -102,9 +101,10 @@ export class Presence implements IPresence {
   }
 }
 
-export const createPresence: CreatePresence = async (
+export function createPresence(options: PresenceOptions): Promise<IPresence>;
+export function createPresence (
   options: PresenceOptions
-) => {
+) {
   return new Promise((resolve) => {
     let id = options?.id || randomId();
     let url = options?.url || 'https://prsc.yomo.dev';

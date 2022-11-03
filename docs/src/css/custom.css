@@ -45,3 +45,8 @@ h3 {
 h4 {
   font-size: 1.25rem;
 }
+
+li {
+  list-style: disc;
+  margin-left: 16px;
+}

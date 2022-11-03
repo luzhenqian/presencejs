@@ -32,14 +32,11 @@ export type InternalPresenceOptions = {
   endpoint?: string;
 };
 
-export interface CreatePresence {
-  (options: PresenceOptions): Promise<IPresence>;
-}
-
-export type IPresence = {
-  joinChannel: (channelId: string, metadata: Metadata) => IChannel;
+export interface IPresence {
+  onReady(callbackFn: (presence: IPresence) => void): void;
+  joinChannel: (channelId: string, metadata?: Metadata) => IChannel;
   leaveChannel: (channelId: string) => void;
-};
+}
 
 export type PeersSubscribeCallbackFn = (peers: Metadata[]) => any;
 export type PeersUnsubscribe = Function;
