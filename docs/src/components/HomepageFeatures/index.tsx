@@ -22,7 +22,7 @@ const FeatureList: FeatureItem[] = [
   {
     title: 'Presence',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    description: <>2</>,
+    description: <>A OpenSource, P2P communication JavaScript Library.</>,
     color: '#D0372D',
     url: '/docs/presence/intro',
   },
@@ -38,7 +38,7 @@ const FeatureList: FeatureItem[] = [
 function Feature({ title, Svg, description, color, url }: FeatureItem) {
   return (
     <div
-      className={'flex flex-col items-center cursor-pointer hover:border-2 flex-1'}
+      className={'flex flex-col items-center cursor-pointer hover:border-2 flex-1 pb-4'}
       style={{
         borderBottom: `8px solid ${color}`,
       }}
