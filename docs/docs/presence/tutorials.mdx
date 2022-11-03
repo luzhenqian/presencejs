@@ -1,0 +1,43 @@
+# 开始使用 Presence
+
+## 创建应用
+
+使用 Presence，首先需要在控制台创建一个应用，并申请一个 App Key、App Secrit 或者 Public Key，然后在客户端初始化 SDK。
+
+## 安装
+
+### 使用 npm
+
+#### 安装
+
+在终端运行如下命令：
+
+```bash
+npm i @yomo/webtransport-polyfill @yomo/presence
+```
+
+#### 导入
+
+在使用 WebTransport 之前，需要导入 WebTransport Polyfill：
+
+```js
+import '@yomo/webtransport-polyfill';
+
+new WebTransport('https://example.com');
+```
+
+<H3>使用 CDN</H3>
+
+如果你想在浏览器中直接使用 WebTransport Polyfill，不经过任何构建步骤。那么可以使用 CDN 的方式。
+
+```html
+<!document html>
+<html>
+  <head>
+    <script src="https://unpkg.com/@yomo/webtransport-polyfill"></script>
+    <script>
+      new WebTransport('https://example.com');
+    </script>
+  </head>
+</html>
+```
