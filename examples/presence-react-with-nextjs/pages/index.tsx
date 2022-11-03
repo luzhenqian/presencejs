@@ -1,11 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import React, { useRef } from 'react';
-import {
-  useMyState,
-  usePeers,
-  useUpdateMyState,
-} from '../libs/presence.config';
+import { useMyState, usePeers, useUpdateMyState } from '../lib/presence.config';
 
 const Home: NextPage = () => {
   const peers = usePeers();
@@ -49,3 +45,10 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export async function getServerSideProps() {
+  await (async () => new Promise((resolve) => setTimeout(resolve, 4000)))();
+  return {
+    props: {},
+  };
+}

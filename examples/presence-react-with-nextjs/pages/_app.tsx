@@ -1,13 +1,16 @@
 import '../../../packages/webtransport-polyfill/dist/index';
-import React from 'react';
 import type { AppProps } from 'next/app';
-import { ChannelProvider, id } from '../libs/presence.config';
+import { ChannelProvider, id } from '../lib/presence.config';
+import Suspense from '../lib/suspense';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp(props: AppProps) {
+  const { Component, pageProps } = props;
   return (
-    <ChannelProvider id="test-channel" initialState={{ id, name: '' }}>
-      <Component {...pageProps} />
-    </ChannelProvider>
+    <Suspense fallback={<div>123</div>}>
+      <ChannelProvider id="test-channel" initialState={{ id, name: '' }}>
+        <Component {...pageProps} />
+      </ChannelProvider>
+    </Suspense>
   );
 }
 
