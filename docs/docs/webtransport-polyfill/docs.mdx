@@ -1,6 +1,9 @@
-import { H1, H2, H3 } from '@site/src/components/Header';
+---
+sidebar_position: 3
+---
+# API
 
-<H1>new WebTransport ()</H1>
+## new WebTransport ()
 
 通过构造函数创建一个新的 WebTransport 实例。
 
@@ -20,7 +23,7 @@ new WebTransport(url: string)
 const wt = new WebTransport('https://example.com/wt');
 ```
 
-<H1>wt.ready</H1>
+## wt.ready
 
 一个 Promise，当 WebTransport 连接建立时，会被解析。
 
@@ -30,7 +33,7 @@ wt.ready.then(() => {
 });
 ```
 
-<H1>wt.closed</H1>
+## wt.closed
 
 一个 Promise，当 WebTransport 连接关闭时，会被解析。
 
@@ -40,7 +43,7 @@ wt.closed.then(() => {
 });
 ```
 
-<H1>wt.datagrams</H1>
+## wt.datagrams
 
 一个可读流，用于接收来自服务器的数据报。
 
@@ -53,7 +56,7 @@ wt.datagrams.readable
   });
 ```
 
-<H1>wt.createSendStream()</H1>
+## wt.createSendStream()
 
 创建一个新的 SendStream，用于向服务器发送数据。
 
@@ -63,7 +66,7 @@ sendStream.write('hello');
 sendStream.close();
 ```
 
-<H1>wt.createBidirectionalStream()</H1>
+## wt.createBidirectionalStream()
 
 创建一个新的 BidirectionalStream，用于双向通信。
 
@@ -79,7 +82,7 @@ bidirectionalStream.writable.write('hello');
 bidirectionalStream.writable.close();
 ```
 
-<H1>wt.createUnidirectionalStream()</H1>
+## wt.createUnidirectionalStream()
 
 创建一个新的 UnidirectionalStream，用于单向通信。
 
