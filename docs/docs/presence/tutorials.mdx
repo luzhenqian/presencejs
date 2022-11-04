@@ -45,7 +45,7 @@ await presence;
 
 ```ts
 presence.onReady(instance => {
-  // TODO
+  console.log('presence is ready');
 });
 ```
 
@@ -64,8 +64,49 @@ presence.joinChannel('channel id', {
 
 ### 与 channel 中的其他用户交互
 
+加入 channel 后，可以通过 `channel.subscribe` 方法监听 channel 中的其他用户发送的事件。
+
+```ts
+channel.subscribe('event name', data => {
+  console.log(data);
+});
+```
+
+可以通过 `channel.broadcast` 方法向 channel 中的其他用户发送事件。
+
+```ts
+channel.broadcast('event name', data);
+```
+
 ### 订阅其他用户的状态
+
+可以通过 `channel.subscribePeers` 方法监听其他用户的状态变化。
+
+每当其他用户的状态发生变化时，都会触发该回调函数。
+
+```ts
+channel.subscribePeers(peers => {
+  console.log(peers);
+});
+```
 
 ### 更新自身状态
 
+可以通过 `channel.updateMetadata` 方法更新自身状态。
+
+```ts
+channel.updateMetadata({
+  name: 'yomo',
+  age: 18,
+});
+```
+
+更新自身状态后，会触发其他用户通过 `channel.subscribePeers` 方法中注册的回调函数。
+
 ### 离开 channel
+
+可以通过 `channel.leave` 方法离开 channel。
+
+```ts
+channel.leave();
+```
