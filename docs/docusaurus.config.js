@@ -7,7 +7,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Presence',
-  tagline: '通过参考文档、教程、视频和实际动手编写代码的方式来学习 Presence，创建出您自己的实时应用程序。',
+  tagline:
+    '通过参考文档、教程、视频和实际动手编写代码的方式来学习 Presence，创建出您自己的实时应用程序。',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -36,15 +37,13 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/luzhenqian/presencejs/blob/v2.0.0/docs/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/luzhenqian/presencejs/blob/v2.0.0/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -70,6 +69,7 @@ const config = {
             label: 'Tutorial',
           },
           { to: '/blog', label: 'Blog', position: 'left' },
+          { to: '/examples', label: 'Examples', position: 'left' },
           {
             href: 'https://github.com/yomorun/presencejs',
             label: 'GitHub',
@@ -115,7 +115,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/yomorun/presencejs',
               },
             ],
           },
