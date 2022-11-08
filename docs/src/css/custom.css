@@ -46,13 +46,19 @@ h4 {
   font-size: 1.25rem;
 }
 
-li {
+.markdown li {
   list-style: disc;
   margin-left: 16px;
 }
 
 .navbar__item,
 .footer__link-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbs,
+.breadcrumbs__item {
   display: flex;
   align-items: center;
 }
