@@ -64,10 +64,10 @@ export class Presence implements IPresence {
     this.#onClosedCallbackFn = callbackFn;
   }
 
-  joinChannel(channelId: string, metadata: Metadata) {
+  joinChannel(channelId: string, metadata?: Metadata) {
     this.#metadata = {
       ...this.#metadata,
-      ...metadata,
+      ...metadata || {},
     };
     const channel = new Channel(channelId, this.#metadata, this.#transport);
     this.#channels.set(channelId, channel);

@@ -14,13 +14,11 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "start:tsup": "tsup ./src/index.ts --dts --watch",
-    "build": "tsdx build",
-    "build:tsup": "tsup ./src/index.ts --dts",
+    "start": "tsup ./src/index.ts --dts --watch",
+    "build": "tsup ./src/index.ts --dts",
     "test": "tsdx test --detectOpenHandles",
     "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "prepare": "tsup ./src/index.ts --dts"
   },
   "np": {
     "yarn": false,
