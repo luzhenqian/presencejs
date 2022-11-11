@@ -38,7 +38,9 @@ export interface IPresence {
   leaveChannel: (channelId: string) => void;
 }
 
-export type PeersSubscribeCallbackFn = (peers: Metadata[]) => any;
+type Peers = Metadata[];
+
+export type PeersSubscribeCallbackFn = (peers: Peers) => any;
 export type PeersUnsubscribe = Function;
 export type PeersSubscribe = (
   callbackFn: PeersSubscribeCallbackFn
@@ -50,7 +52,7 @@ export type ChannelEventSubscribeCallbackFn<T> = (
   metadata: Metadata
 ) => any;
 
-export type IChannel = {
+export interface IChannel {
   id: string;
   broadcast<T>(eventName: string, payload: T): void;
   subscribe<T>(
@@ -60,7 +62,7 @@ export type IChannel = {
   subscribePeers: PeersSubscribe;
   updateMetadata: (metadata: Metadata) => void;
   leave(): void;
-};
+}
 
 export interface Signaling {
   t: 'control' | 'data';
