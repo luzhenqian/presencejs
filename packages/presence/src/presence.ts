@@ -30,7 +30,7 @@ export class Presence implements IPresence {
   }
 
   async #formatUrl() {
-    if ('publicKey' in this.#options) {
+    if ('appId' in this.#options && 'publicKey' in this.#options) {
       return this.#formatUrlWithPublicKey();
     } else if (
       'appId' in this.#options &&
@@ -51,7 +51,7 @@ export class Presence implements IPresence {
   #formatUrlWithPublicKey() {
     return `${this.#options.url}?publickey=${this.#options.publicKey}&id=${
       this.#metadata.id
-    }`;
+    }&app_id=${this.#options.appId}`;
   }
 
   onReady(callbackFn: Function) {

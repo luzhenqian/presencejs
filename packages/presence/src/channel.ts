@@ -18,6 +18,7 @@ export class Channel implements IChannel {
   #members: Metadata[] = [];
   #peers: Peers | null = null;
   #joinTimestamp: number;
+  #writer: any;
   id: string;
   constructor(id: string, metadata: Metadata, transport: any) {
     this.id = id;
@@ -93,9 +94,12 @@ export class Channel implements IChannel {
     writer.close();
   }
   async #write(data: Uint8Array) {
-    const writer = this.#transport.datagrams.writable.getWriter();
-    writer.write(data);
-    writer.close();
+    console.log(this.#metadata,data, this.#transport.datagrams.writable);
+    if(!this.#writer) {
+      this.#writer = this.#transport.datagrams.writable.getWriter();
+    }
+    this.#writer.write(data);
+    // writer.close();
   }
   async #read() {
     try {
@@ -173,6 +177,7 @@ export class Channel implements IChannel {
     }
   }
   #online() {
+    console.log('online');
     this.#write(
       signalingEncode({
         t: 'control',
@@ -181,6 +186,8 @@ export class Channel implements IChannel {
         p: this.#metadata.id,
       })
     );
+    console.log('online done');
+    
   }
   #syncState() {
     this.#write(

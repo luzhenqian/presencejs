@@ -1,12 +1,12 @@
 import fetch from 'node-fetch';
 import { createPresence } from '../src/presence';
-import { WebTransport } from '../../webtransport-polyfill/src/index';
+import { WebTransportPolyfill } from '../../webtransport-polyfill/src/index';
 var streams = require('web-streams-polyfill/ponyfill');
 
 // @ts-ignore
 globalThis.fetch = fetch;
 // @ts-ignore
-globalThis.WebTransport = WebTransport;
+globalThis.WebTransport = WebTransportPolyfill;
 // @ts-ignore
 globalThis.WritableStream = streams.WritableStream;
 // @ts-ignore
