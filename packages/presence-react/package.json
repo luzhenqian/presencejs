@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@yomo/presence-react",
-  "version": "next",
+  "version": "1.0.0",
   "description": "@yomo/presence-react ⚡️ made realtime web applications edge-aware by YoMo",
   "keywords": [
     "yomo",
