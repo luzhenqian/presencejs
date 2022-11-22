@@ -1,6 +1,6 @@
 {
   "name": "@yomo/webtransport-polyfill",
-  "version": "next",
+  "version": "1.0.0",
   "description": "a polyfill for the web transport",
   "keywords": [
     "webtransport",

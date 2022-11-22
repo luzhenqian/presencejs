@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-export class WebTransport {
+export class WebTransportPolyfill {
   public closed: Promise<unknown>;
   public ready: Promise<unknown>;
   #ws: WebSocket | null = null;
@@ -64,8 +64,8 @@ export class WebTransport {
 
 if (typeof window !== 'undefined') {
   if (typeof window.WebTransport === 'undefined') {
-    window.WebTransport = WebTransport;
+    window.WebTransport = WebTransportPolyfill;
   }
 }
 
-export default WebTransport;
+export default WebTransportPolyfill;
