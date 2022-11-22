@@ -26,9 +26,10 @@ export default class HugGroup extends LitElement {
 
   createRenderRoot() {
     createPresence({
-      url: 'https://lo.allegrocloud.io:8443/v1/ws',
+      url: 'https://prscd2.allegro.earth/v1',
       publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
       id: this.id,
+      appId: 'cc',
     }).then((yomo) => {
       this.channel = yomo.joinChannel('hug-group', {
         id: this.id,
