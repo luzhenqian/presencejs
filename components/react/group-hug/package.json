@@ -1,0 +1,27 @@
+{
+  "name": "@yomo/group-hug-react",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "start": "vite"
+  },
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@yomo/presence": "workspace:^2.0.0",
+    "@yomo/presence-react": "workspace:^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "@yomo/presence": "workspace:^2.0.0",
+    "@yomo/presence-react": "workspace:^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@mdx-js/rollup": "^2.1.5",
+    "@web/dev-server": "^0.1.35",
+    "concurrently": "^7.6.0"
+  }
+}
