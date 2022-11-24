@@ -7,7 +7,8 @@
     "websocket"
   ],
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -29,7 +30,6 @@
       "url": "https://www.luzhenqian.com"
     }
   ],
-  "module": "dist/index.js",
   "devDependencies": {
     "@types/node-fetch": "^2.5.12",
     "@types/react": "^18.0.9",
