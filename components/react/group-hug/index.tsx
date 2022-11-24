@@ -32,7 +32,7 @@ export default function GroupHug(props: GroupHugProps) {
     avatarBorderColor,
   });
   const [users, setUsers] = useState([]);
-  const [channel, setChannel] = useState(null);
+  const [connected, setConnected] = useState(false);
   useEffect(() => {
     let channel: IChannel | null = null;
     props.presence.then((yomo) => {
@@ -43,7 +43,7 @@ export default function GroupHug(props: GroupHugProps) {
       });
 
       setUsers([myState]);
-      setChannel(channel);
+      setConnected(true);
     });
 
     const beforeunloadCb = () => {
@@ -70,7 +70,7 @@ export default function GroupHug(props: GroupHugProps) {
     };
   }, []);
 
-  if (!channel) {
+  if (!connected) {
     return <div></div>;
   }
 
