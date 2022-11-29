@@ -46,11 +46,6 @@ export default function GroupHug(props: GroupHugProps) {
       setConnected(true);
     });
 
-    const beforeunloadCb = () => {
-      channel?.leave();
-    };
-    window.addEventListener('beforeunload', beforeunloadCb);
-
     const visibilitychangeCb = () => {
       if (document.hidden) {
         const newState = { ...myState, state: 'away' };
@@ -65,7 +60,6 @@ export default function GroupHug(props: GroupHugProps) {
     document.addEventListener('visibilitychange', visibilitychangeCb);
 
     return () => {
-      window.removeEventListener('beforeunload', beforeunloadCb);
       document.removeEventListener('visibilitychange', visibilitychangeCb);
     };
   }, []);
