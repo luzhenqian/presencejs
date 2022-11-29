@@ -116,16 +116,7 @@ function ImageAvatar({ size, user }) {
         alt={user.id}
         className="box-content relative bg-white rounded-full"
       />
-      {user.state === 'away' && (
-        <span
-          className="absolute top-[0px] left-[0px] bg-black opacity-5
-          rounded-full"
-          style={{
-            width: `calc(100%)`,
-            height: `calc(100%)`,
-          }}
-        ></span>
-      )}
+      {user.state === 'away' && <Mask />}
     </>
   );
 }
@@ -133,21 +124,25 @@ function ImageAvatar({ size, user }) {
 function TextAvatar({ size, user }) {
   if (!!!user.name) return null;
   return (
-    <div
-      style={{
-        minWidth: `${size}px`,
-        minHeight: `${size}px`,
-        width: `${size}px`,
-        height: `${size}px`,
-        lineHeight: `${size}px`,
-        background: `${user.avatarBorderColor}`,
-        border: `2px solid ${user.avatarBorderColor}`,
-        fontSize: '14px',
-      }}
-      className="box-content text-center text-black bg-white rounded-full"
-    >
-      {user.name.charAt(0)}
-    </div>
+    <>
+      <div
+        style={{
+          minWidth: `${size}px`,
+          minHeight: `${size}px`,
+          width: `${size}px`,
+          height: `${size}px`,
+          lineHeight: `${size}px`,
+          background: `${user.avatarBorderColor}`,
+          border: `2px solid ${user.avatarBorderColor}`,
+          fontSize: '14px',
+        }}
+        className="box-content text-center text-black bg-white rounded-full"
+      >
+        {user.name.charAt(0)}
+      </div>
+
+      {user.state === 'away' && <Mask />}
+    </>
   );
 }
 
@@ -234,6 +229,18 @@ function Avatar({ style = {}, user, size }) {
       )}
       <Tip size={size} display={display} name={user.name} />
     </div>
+  );
+}
+
+function Mask() {
+  return (
+    <span
+      className="absolute top-[0px] left-[0px] bg-white opacity-60 rounded-full"
+      style={{
+        width: `calc(100%)`,
+        height: `calc(100%)`,
+      }}
+    ></span>
   );
 }
 
