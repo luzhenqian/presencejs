@@ -82,21 +82,8 @@ export default function GroupHug(props: GroupHugProps) {
     >
       {users.slice(0, 6).map((user, i) => {
         if (i < 5) {
-          if (user.avatar) {
-            return (
-              <ImageAvatar
-                key={user.id}
-                size={size}
-                style={{
-                  transform: `translateX(${i * -4}px)`,
-                  zIndex: `${i}`,
-                }}
-                user={user}
-              />
-            );
-          }
           return (
-            <TextAvatar
+            <Avatar
               key={user.id}
               size={size}
               style={{
@@ -113,19 +100,9 @@ export default function GroupHug(props: GroupHugProps) {
   );
 }
 
-function ImageAvatar({ size, style = {}, user }) {
-  const [display, setDisplay] = useState('none');
+function ImageAvatar({ size, user }) {
   return (
-    <div
-      style={style}
-      className="relative "
-      onMouseEnter={() => {
-        setDisplay('block');
-      }}
-      onMouseLeave={() => {
-        setDisplay('none');
-      }}
-    >
+    <>
       <img
         style={{
           minWidth: `${size}px`,
@@ -149,27 +126,17 @@ function ImageAvatar({ size, style = {}, user }) {
           }}
         ></span>
       )}
-      <span
-        className="absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md"
-        style={{
-          top: `${size + 8}px`,
-          display: display,
-          transform: `translateX(calc(-50% + ${size / 2}px))`,
-        }}
-      >
-        {user.name}
-      </span>
-    </div>
+    </>
   );
 }
 
-function TextAvatar({ size, style, user }) {
+function TextAvatar({ size, user }) {
   if (!!!user.name) return null;
   return (
-    <span
+    <div
       style={{
-        ...style,
         minWidth: `${size}px`,
+        minHeight: `${size}px`,
         width: `${size}px`,
         height: `${size}px`,
         lineHeight: `${size}px`,
@@ -177,10 +144,10 @@ function TextAvatar({ size, style, user }) {
         border: `2px solid ${user.avatarBorderColor}`,
         fontSize: '14px',
       }}
-      className="box-content text-center bg-white rounded-full"
+      className="box-content text-center text-black bg-white rounded-full"
     >
       {user.name.charAt(0)}
-    </span>
+    </div>
   );
 }
 
@@ -223,7 +190,7 @@ function Others({ size, users }) {
             className="flex items-center gap-2 p-[10px] hover:bg-[#F5F5F5]
           rounded-[6px]"
           >
-            <ImageAvatar size={size} user={user} />
+            <Avatar size={size} user={user} />
             <span>{user.name}</span>
           </div>
         ))}
@@ -232,8 +199,42 @@ function Others({ size, users }) {
   );
 }
 
-function Tip() {
-  // TODO:
+function Tip({ size, display, name }) {
+  return (
+    <span
+      className="absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md"
+      style={{
+        top: `${size + 8}px`,
+        display: display,
+        transform: `translateX(calc(-50% + ${size / 2}px))`,
+      }}
+    >
+      {name}
+    </span>
+  );
+}
+
+function Avatar({ style = {}, user, size }) {
+  const [display, setDisplay] = useState('none');
+  return (
+    <div
+      style={style}
+      className="relative "
+      onMouseEnter={() => {
+        setDisplay('block');
+      }}
+      onMouseLeave={() => {
+        setDisplay('none');
+      }}
+    >
+      {user.avatar ? (
+        <ImageAvatar size={size} user={user} />
+      ) : (
+        <TextAvatar size={size} user={user} />
+      )}
+      <Tip size={size} display={display} name={user.name} />
+    </div>
+  );
 }
 
 GroupHug.defaultProps = GroupHugDefaultProps;
