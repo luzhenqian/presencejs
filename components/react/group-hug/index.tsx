@@ -2,19 +2,13 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { IChannel } from '@yomo/presence';
 import { GroupHugDefaultProps, GroupHugProps, User } from './types';
 
-// https://tailwindcolor.com/
 const colors = [
-  '#EF4444', // red500
-  '#F97316', // orange500
-  '#F97316', // amber500
-  '#EAB308', // yellow500
-  '#84CC16', // lime500
-  '#22C55E', // green500
-  '#10B981', // emerald500
-  '#14B8A6', // teal500
-  '#06B6D4', // cyan500
-  '#0EA5E9', // lightBlue500
-  '#3B82F6', //blue500
+  '#FF38D1',
+  '#8263FF',
+  '#0095FF',
+  '#00B874',
+  '#FF3168',
+  '#FFAB03',
 ];
 
 const sizes = {
