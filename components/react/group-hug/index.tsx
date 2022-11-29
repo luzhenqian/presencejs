@@ -12,7 +12,7 @@ const colors = [
 ];
 
 const sizes = {
-  md: 30,
+  md: 24, // 24 + 2 * 4 = 32
 };
 
 const GroupHugCtx = createContext<{
@@ -92,9 +92,8 @@ export default function GroupHug(props: GroupHugProps) {
             return (
               <Avatar
                 key={user.id}
-                size={size}
                 style={{
-                  transform: `translateX(${i * -4}px)`,
+                  transform: `translateX(${i * -8}px)`,
                   zIndex: `${i}`,
                 }}
                 user={user}
@@ -163,45 +162,54 @@ function Others({ size, users }) {
 
   return (
     <div
-      style={{
-        transform: `translateX(${5 * -4}px)`,
-        minWidth: `${size}px`,
-        width: `${size}px`,
-        height: `${size}px`,
-        backgroundColor: display === 'none' ? 'white' : '#EAEAEA',
-      }}
-      className="box-content relative text-[#666666] text-[12px] font-[500]
+      className=" rounded-full border-[2px] border-white  z-10"
+      style={{ transform: `translateX(${5 * -8}px)` }}
+    >
+      <div
+        style={{
+          minWidth: `${size}px`,
+          width: `${size}px`,
+          height: `${size}px`,
+          backgroundColor: display === 'none' ? 'white' : '#EAEAEA',
+        }}
+        className="box-content relative text-[#666666] text-[12px] font-[500]
       border-[#999999] border-2
-      rounded-full z-10
+      rounded-full
       hover:border-[#000000]
       hover:text-[#000000]"
-    >
-      <span
-        className="absolute inline-flex items-center justify-center w-full h-full rounded-full "
-        onClick={() => setDisplay(display === 'none' ? 'block' : 'none')}
       >
-        +{users.length - 5}
-      </span>
+        <span
+          className="absolute inline-flex items-center justify-center w-full h-full rounded-full "
+          onClick={() => setDisplay(display === 'none' ? 'block' : 'none')}
+        >
+          +{users.length - 5}
+        </span>
 
-      <span
-        className="p-[10px] absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md"
-        style={{
-          top: `${size + 8}px`,
-          display: display,
-          right: `0`,
-        }}
-      >
-        {users.slice(5, users.length).map((user) => (
-          <div
-            key={user.id}
-            className="flex items-center gap-2 p-[10px] hover:bg-[#F5F5F5]
-          rounded-[6px]"
-          >
-            <Avatar size={size} user={user} />
-            <span>{user.name}</span>
-          </div>
-        ))}
-      </span>
+        <span
+          className="p-[10px] absolute text-[14px] rounded-[6px] whitespace-nowrap shadow-md"
+          style={{
+            top: `${size + 8}px`,
+            display: display,
+            right: `0`,
+          }}
+        >
+          {users.slice(5, users.length).map((user) => (
+            <div
+              key={user.id}
+              className="flex items-center gap-2 p-[10px] hover:bg-[#F5F5F5] rounded-[6px]"
+            >
+              <Avatar
+                user={user}
+                useTip={false}
+                style={{
+                  border: 'none',
+                }}
+              />
+              <span>{user.name}</span>
+            </div>
+          ))}
+        </span>
+      </div>
     </div>
   );
 }
@@ -218,17 +226,25 @@ function Tip({ display, name }) {
         transform: `translateX(calc(-50% + ${size / 2}px))`,
       }}
     >
-      {`${name} ${name === self.name && '(you)'}`}
+      {`${name} ${name === self.name ? '(you)' : ''}`}
     </span>
   );
 }
 
-function Avatar({ style = {}, user, size }) {
+function Avatar({
+  style = {},
+  user,
+  useTip = true,
+}: {
+  style?: any;
+  user: User;
+  useTip?: boolean;
+}) {
   const [display, setDisplay] = useState('none');
   return (
     <div
       style={style}
-      className="relative "
+      className="relative rounded-full border-[2px] border-white"
       onMouseEnter={() => {
         setDisplay('block');
       }}
@@ -237,7 +253,7 @@ function Avatar({ style = {}, user, size }) {
       }}
     >
       {user.avatar ? <ImageAvatar user={user} /> : <TextAvatar user={user} />}
-      <Tip display={display} name={user.name} />
+      {useTip && <Tip display={display} name={user.name} />}
     </div>
   );
 }
