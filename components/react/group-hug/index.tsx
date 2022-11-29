@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { IChannel } from '@yomo/presence';
 import { GroupHugDefaultProps, GroupHugProps, User } from './types';
 
@@ -20,6 +20,12 @@ const colors = [
 const sizes = {
   md: 30,
 };
+
+const GroupHugCtx = createContext<{
+  users: User[];
+  self: User;
+  size: number;
+} | null>(null);
 
 export default function GroupHug(props: GroupHugProps) {
   const { id, avatar } = props;
@@ -74,33 +80,43 @@ export default function GroupHug(props: GroupHugProps) {
   }
 
   return (
-    <div
-      className="relative flex"
-      style={{
-        marginRight: `${14 - Math.min(users.length, 6) * 2}px`,
+    <GroupHugCtx.Provider
+      value={{
+        size,
+        users,
+        self: myState,
       }}
     >
-      {users.slice(0, 6).map((user, i) => {
-        if (i < 5) {
-          return (
-            <Avatar
-              key={user.id}
-              size={size}
-              style={{
-                transform: `translateX(${i * -4}px)`,
-                zIndex: `${i}`,
-              }}
-              user={user}
-            />
-          );
-        }
-      })}
-      {users.length > 5 && <Others size={size} users={users} />}
-    </div>
+      <div
+        className="relative flex"
+        style={{
+          marginRight: `${14 - Math.min(users.length, 6) * 2}px`,
+        }}
+      >
+        {users.slice(0, 6).map((user, i) => {
+          if (i < 5) {
+            return (
+              <Avatar
+                key={user.id}
+                size={size}
+                style={{
+                  transform: `translateX(${i * -4}px)`,
+                  zIndex: `${i}`,
+                }}
+                user={user}
+              />
+            );
+          }
+        })}
+        {users.length > 5 && <Others size={size} users={users} />}
+      </div>
+    </GroupHugCtx.Provider>
   );
 }
 
-function ImageAvatar({ size, user }) {
+function ImageAvatar({ user }) {
+  const ctx = useContext(GroupHugCtx);
+  const { size } = ctx!;
   return (
     <>
       <img
@@ -121,7 +137,9 @@ function ImageAvatar({ size, user }) {
   );
 }
 
-function TextAvatar({ size, user }) {
+function TextAvatar({ user }) {
+  const ctx = useContext(GroupHugCtx);
+  const { size } = ctx!;
   if (!!!user.name) return null;
   return (
     <>
@@ -194,7 +212,9 @@ function Others({ size, users }) {
   );
 }
 
-function Tip({ size, display, name }) {
+function Tip({ display, name }) {
+  const ctx = useContext(GroupHugCtx);
+  const { size, self } = ctx!;
   return (
     <span
       className="absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md"
@@ -204,7 +224,7 @@ function Tip({ size, display, name }) {
         transform: `translateX(calc(-50% + ${size / 2}px))`,
       }}
     >
-      {name}
+      {`${name} ${name === self.name && '(you)'}`}
     </span>
   );
 }
@@ -222,12 +242,8 @@ function Avatar({ style = {}, user, size }) {
         setDisplay('none');
       }}
     >
-      {user.avatar ? (
-        <ImageAvatar size={size} user={user} />
-      ) : (
-        <TextAvatar size={size} user={user} />
-      )}
-      <Tip size={size} display={display} name={user.name} />
+      {user.avatar ? <ImageAvatar user={user} /> : <TextAvatar user={user} />}
+      <Tip display={display} name={user.name} />
     </div>
   );
 }
