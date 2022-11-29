@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IChannel } from '@yomo/presence';
-import { GroupHugProps } from './types';
-import DefaultAvatar from './DefaultAvatar';
+import { GroupHugDefaultProps, GroupHugProps, User } from './types';
 
 // https://tailwindcolor.com/
 const colors = [
@@ -18,20 +17,26 @@ const colors = [
   '#3B82F6', //blue500
 ];
 
+const sizes = {
+  md: 30,
+};
+
 export default function GroupHug(props: GroupHugProps) {
   const { id, avatar } = props;
-  let { avatarBorderColor } = props;
+  let { avatarBorderColor, name } = props;
+  const size = sizes[props.size!];
   if (!avatarBorderColor) {
     let idx = Math.floor(Math.random() * colors.length);
     avatarBorderColor = colors[idx];
   }
-  const [myState, setMyState] = useState({
+  const [myState, setMyState] = useState<User>({
     id,
     avatar,
     state: 'online',
     avatarBorderColor,
+    name,
   });
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [connected, setConnected] = useState(false);
   useEffect(() => {
     let channel: IChannel | null = null;
@@ -39,7 +44,7 @@ export default function GroupHug(props: GroupHugProps) {
       channel = yomo.joinChannel('group-hug', myState);
 
       channel.subscribePeers((peers) => {
-        setUsers([myState, ...peers]);
+        setUsers([myState, ...(peers as User[])]);
       });
 
       setUsers([myState]);
@@ -48,11 +53,11 @@ export default function GroupHug(props: GroupHugProps) {
 
     const visibilitychangeCb = () => {
       if (document.hidden) {
-        const newState = { ...myState, state: 'away' };
+        const newState: User = { ...myState, state: 'away' };
         channel?.updateMetadata(newState);
         setMyState(newState);
       } else {
-        const newState = { ...myState, state: 'online' };
+        const newState: User = { ...myState, state: 'online' };
         channel?.updateMetadata(newState);
         setMyState(newState);
       }
@@ -68,103 +73,167 @@ export default function GroupHug(props: GroupHugProps) {
     return <div></div>;
   }
 
-  // FIXME:
-  console.log('users:', users);
-
   return (
-    <div className="flex items-center">
-      <div
-        className="relative flex "
-        style={{
-          marginRight: `${14 - Math.min(users.length, 6) * 2}px`,
-        }}
-      >
-        {users.slice(0, 6).map((user, i) => {
-          if (i < 5) {
-            if (user.avatar) {
-              return (
-                <img
-                  key={user.id}
-                  style={{
-                    transform: `translateX(${i * -4}px)`,
-                    zIndex: `${users.length - i}`,
-                    width: '20px',
-                    height: '20px',
-                    objectFit: 'contain',
-                    borderRadius: '50%',
-                    opacity: `${user.state === 'away' ? '0.5' : '1'}`,
-                    border: `1px solid ${user.avatarBorderColor}`,
-                  }}
-                  src={user.avatar}
-                  alt={user.id}
-                  className="box-border bg-white"
-                />
-              );
-            }
+    <div
+      className="relative flex"
+      style={{
+        marginRight: `${14 - Math.min(users.length, 6) * 2}px`,
+      }}
+    >
+      {users.slice(0, 6).map((user, i) => {
+        if (i < 5) {
+          if (user.avatar) {
             return (
-              <DefaultAvatar
+              <ImageAvatar
                 key={user.id}
+                size={size}
                 style={{
-                  transform: `translateX(${i * -2}px);z-index:${
-                    users.length - i
-                  }`,
-                  opacity: `${user.state === 'away' ? '0.5' : '1'}`,
+                  transform: `translateX(${i * -4}px)`,
+                  zIndex: `${i}`,
                 }}
+                user={user}
               />
             );
-          } else {
-            return (
-              <div
-                key={user.id}
-                style={{
-                  transform: `translateX(${i * -2}px)`,
-                  zIndex: `${users.length - i}`,
-                  width: '22px',
-                  height: '22px',
-                }}
-                className="relative text-white text-[12px] font-[500] font-normal box-border"
-              >
-                <span
-                  className="absolute inline-flex items-center justify-center w-full h-full rounded-full"
-                  style={{
-                    background: 'rgba(0, 0, 0, 0.6)',
-                  }}
-                >
-                  +{users.length - 5}
-                </span>
-                <DefaultAvatar
-                  key={user.id}
-                  style={{
-                    transform: `translateX(${i * -2}px);z-index:${
-                      users.length - i
-                    }`,
-                    opacity: `${user.state === 'away' ? '0.5' : '1'}`,
-                  }}
-                />
-              </div>
-            );
           }
-        })}
-      </div>
-      <div
-        className="flex rounded-[1rem] py-1 px-2"
-        style={{
-          background:
-            'linear-gradient(115.54deg, #7787FF 30.62%, #E080C9 83.83%)',
-        }}
-      >
-        <span className="font-normal leading-4 text-[0.75rem] text-white mr-[2px]">
-          live
-        </span>
-        <span className="flex justify-center items-center text-[0.75rem] text-[#604CFF] rounded-full w-4 h-4 bg-white">
-          {users.length}
-        </span>
-      </div>
+          return (
+            <TextAvatar
+              key={user.id}
+              size={size}
+              style={{
+                transform: `translateX(${i * -4}px)`,
+                zIndex: `${i}`,
+              }}
+              user={user}
+            />
+          );
+        }
+      })}
+      {users.length > 5 && <Others size={size} users={users} />}
     </div>
   );
 }
 
-GroupHug.defaultProps = {
-  size: 'md',
-  grouped: true,
-};
+function ImageAvatar({ size, style = {}, user }) {
+  const [display, setDisplay] = useState('none');
+  return (
+    <div
+      style={style}
+      className="relative "
+      onMouseEnter={() => {
+        setDisplay('block');
+      }}
+      onMouseLeave={() => {
+        setDisplay('none');
+      }}
+    >
+      <img
+        style={{
+          minWidth: `${size}px`,
+          width: `${size}px`,
+          height: `${size}px`,
+          objectFit: 'contain',
+          // opacity: `${user.state === 'away' ? '0.5' : '1'}`,
+          border: `2px solid ${user.avatarBorderColor}`,
+        }}
+        src={user.avatar}
+        alt={user.id}
+        className="box-content relative bg-white rounded-full"
+      />
+      {user.state === 'away' && (
+        <span
+          className="absolute top-[0px] left-[0px] bg-black opacity-5
+          rounded-full"
+          style={{
+            width: `calc(100%)`,
+            height: `calc(100%)`,
+          }}
+        ></span>
+      )}
+      <span
+        className="absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md"
+        style={{
+          top: `${size + 8}px`,
+          display: display,
+          transform: `translateX(calc(-50% + ${size / 2}px))`,
+        }}
+      >
+        {user.name}
+      </span>
+    </div>
+  );
+}
+
+function TextAvatar({ size, style, user }) {
+  if (!!!user.name) return null;
+  return (
+    <span
+      style={{
+        ...style,
+        minWidth: `${size}px`,
+        width: `${size}px`,
+        height: `${size}px`,
+        lineHeight: `${size}px`,
+        background: `${user.avatarBorderColor}`,
+        border: `2px solid ${user.avatarBorderColor}`,
+        fontSize: '14px',
+      }}
+      className="box-content text-center bg-white rounded-full"
+    >
+      {user.name.charAt(0)}
+    </span>
+  );
+}
+
+function Others({ size, users }) {
+  const [display, setDisplay] = useState('none');
+
+  return (
+    <div
+      style={{
+        transform: `translateX(${5 * -4}px)`,
+        minWidth: `${size}px`,
+        width: `${size}px`,
+        height: `${size}px`,
+        backgroundColor: display === 'none' ? 'white' : '#EAEAEA',
+      }}
+      className="box-content relative text-[#666666] text-[12px] font-[500]
+      border-[#999999] border-2
+      rounded-full z-10
+      hover:border-[#000000]
+      hover:text-[#000000]"
+    >
+      <span
+        className="absolute inline-flex items-center justify-center w-full h-full rounded-full "
+        onClick={() => setDisplay(display === 'none' ? 'block' : 'none')}
+      >
+        +{users.length - 5}
+      </span>
+
+      <span
+        className="p-[10px] absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md"
+        style={{
+          top: `${size + 8}px`,
+          display: display,
+          right: `0`,
+        }}
+      >
+        {users.slice(5, users.length).map((user) => (
+          <div
+            key={user.id}
+            className="flex items-center gap-2 p-[10px] hover:bg-[#F5F5F5]
+          rounded-[6px]"
+          >
+            <ImageAvatar size={size} user={user} />
+            <span>{user.name}</span>
+          </div>
+        ))}
+      </span>
+    </div>
+  );
+}
+
+function Tip() {
+  // TODO:
+}
+
+GroupHug.defaultProps = GroupHugDefaultProps;
