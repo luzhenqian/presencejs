@@ -45,11 +45,7 @@ export class Channel implements IChannel {
     return this.#peers.subscribe(callbackFn);
   }
   leave() {
-    const writer = this.#transport.datagrams.writable.getWriter();
-    writer.write(
-      msgPackEncode({ t: 'control', op: 'peer_offline', c: this.id })
-    );
-    writer.close();
+    this.#transport.close();
   }
   updateMetadata(metadata: Metadata) {
     this.#metadata = metadata;
@@ -94,8 +90,7 @@ export class Channel implements IChannel {
     writer.close();
   }
   async #write(data: Uint8Array) {
-    console.log(this.#metadata,data, this.#transport.datagrams.writable);
-    if(!this.#writer) {
+    if (!this.#writer) {
       this.#writer = this.#transport.datagrams.writable.getWriter();
     }
     this.#writer.write(data);
@@ -186,8 +181,6 @@ export class Channel implements IChannel {
         p: this.#metadata.id,
       })
     );
-    console.log('online done');
-    
   }
   #syncState() {
     this.#write(
