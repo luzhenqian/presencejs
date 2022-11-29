@@ -6,6 +6,5 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: 'es6',
-  format: ['cjs', 'esm'],
-  // format: ['iife', 'cjs']
+  format: ['cjs', 'esm']
 });
