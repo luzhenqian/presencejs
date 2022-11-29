@@ -162,7 +162,7 @@ function Others({ size, users }) {
 
   return (
     <div
-      className=" rounded-full border-[2px] border-white  z-10"
+      className="rounded-full border-[2px] border-white z-10 cursor-pointer"
       style={{ transform: `translateX(${5 * -8}px)` }}
     >
       <div

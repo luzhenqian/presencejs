@@ -67,7 +67,7 @@ export class Presence implements IPresence {
   joinChannel(channelId: string, metadata?: Metadata) {
     this.#metadata = {
       ...this.#metadata,
-      ...metadata || {},
+      ...(metadata || {}),
     };
     const channel = new Channel(channelId, this.#metadata, this.#transport);
     this.#channels.set(channelId, channel);
@@ -92,19 +92,23 @@ export class Presence implements IPresence {
         this.#onErrorCallbackFn(e);
       });
 
-    this.#transport.closed.then(() => {
-      this.#onClosedCallbackFn();
-      this.#channels.forEach((channel) => {
-        channel.leave();
+    this.#transport.closed
+      .then(() => {
+        this.#onClosedCallbackFn();
+        this.#channels.forEach((channel) => {
+          channel.leave();
+        });
+      })
+      .catch((e: Error) => {
+        setTimeout(() => {
+          this.#connect();
+        }, 2_000);
       });
-    });
   }
 }
 
 export function createPresence(options: PresenceOptions): Promise<IPresence>;
-export function createPresence (
-  options: PresenceOptions
-) {
+export function createPresence(options: PresenceOptions) {
   return new Promise((resolve) => {
     let id = options?.id || randomId();
     let url = options?.url || 'https://prsc.yomo.dev';
@@ -120,4 +124,4 @@ export function createPresence (
     //   reject(e);
     // });
   });
-};
+}
