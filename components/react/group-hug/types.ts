@@ -40,6 +40,7 @@ export const GroupHugDefaultProps = {
   size: 'md',
   avatar: '',
   grouped: true,
+  darkMode: false,
 };
 
 export type GroupHugProps = {
@@ -50,6 +51,7 @@ export type GroupHugProps = {
   grouped?: boolean;
   avatar?: string;
   name: string;
+  darkMode?: boolean;
 } & typeof GroupHugDefaultProps;
 
 export type User = {

@@ -19,12 +19,13 @@ const GroupHugCtx = createContext<{
   users: User[];
   self: User;
   size: number;
+  darkMode: boolean;
 } | null>(null);
 
 export default function GroupHug(props: GroupHugProps) {
-  const { id, avatar } = props;
+  const { id, avatar, darkMode } = props;
   let { avatarBorderColor, name } = props;
-  const size = sizes[props.size!];
+  const size = sizes[props.size];
   if (!avatarBorderColor) {
     let idx = Math.floor(Math.random() * colors.length);
     avatarBorderColor = colors[idx];
@@ -40,10 +41,10 @@ export default function GroupHug(props: GroupHugProps) {
   const [connected, setConnected] = useState(false);
   useEffect(() => {
     let channel: IChannel | null = null;
-    props.presence.then((yomo) => {
+    props.presence.then(yomo => {
       channel = yomo.joinChannel('group-hug', myState);
 
-      channel.subscribePeers((peers) => {
+      channel.subscribePeers(peers => {
         setUsers([myState, ...(peers as User[])]);
       });
 
@@ -79,10 +80,11 @@ export default function GroupHug(props: GroupHugProps) {
         size,
         users,
         self: myState,
+        darkMode,
       }}
     >
       <div
-        className="relative flex"
+        className={`relative flex ${darkMode ? 'dark' : ''}`}
         style={{
           marginRight: `${14 - Math.min(users.length, 6) * 2}px`,
         }}
@@ -162,7 +164,7 @@ function Others({ size, users }) {
 
   return (
     <div
-      className="rounded-full border-[2px] border-white z-10 cursor-pointer"
+      className="rounded-full border-[2px] border-white z-10 cursor-pointer dark:border-black"
       style={{ transform: `translateX(${5 * -8}px)` }}
     >
       <div
@@ -170,13 +172,22 @@ function Others({ size, users }) {
           minWidth: `${size}px`,
           width: `${size}px`,
           height: `${size}px`,
-          backgroundColor: display === 'none' ? 'white' : '#EAEAEA',
         }}
-        className="box-content relative text-[#666666] text-[12px] font-[500]
-      border-[#999999] border-2
+        className={`box-content relative text-[#666666] text-[12px] font-[500]
+      border-[#999999]
+      dark:border-[#666666]
+      dark:text-[#DDDDDD]
+      border-2
       rounded-full
       hover:border-[#000000]
-      hover:text-[#000000]"
+      hover:text-[#000000]
+      dark:hover:border-[#ffffff]
+      dark:hover:text-[#ffffff]
+      ${
+        display === 'block'
+          ? 'bg-[#EAEAEA] dark:bg-[#333333]'
+          : 'bg-white dark:bg-black'
+      }`}
       >
         <span
           className="absolute inline-flex items-center justify-center w-full h-full rounded-full "
@@ -186,17 +197,20 @@ function Others({ size, users }) {
         </span>
 
         <span
-          className="p-[10px] absolute text-[14px] rounded-[6px] whitespace-nowrap shadow-md"
+          className="p-[10px] absolute text-[14px] rounded-[6px] whitespace-nowrap shadow-md
+bg-white dark:bg-[#383838]
+font-[400]"
           style={{
             top: `${size + 8}px`,
             display: display,
             right: `0`,
           }}
         >
-          {users.slice(5, users.length).map((user) => (
+          {users.slice(5, users.length).map(user => (
             <div
               key={user.id}
-              className="flex items-center gap-2 p-[10px] hover:bg-[#F5F5F5] rounded-[6px]"
+              className="flex items-center gap-2 p-[10px]
+              dark:hover:bg-[#444444] hover:bg-[#F5F5F5] rounded-[6px]"
             >
               <Avatar
                 user={user}
@@ -205,7 +219,9 @@ function Others({ size, users }) {
                   border: 'none',
                 }}
               />
-              <span>{user.name}</span>
+              <span className="text-black dark:text-white">
+                {user.name}
+              </span>
             </div>
           ))}
         </span>
@@ -219,7 +235,11 @@ function Tip({ display, name }) {
   const { size, self } = ctx!;
   return (
     <span
-      className="absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md"
+      className="absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md
+      bg-white dark:bg-[#383838]
+      text-black dark:text-white
+      font-[400]
+      "
       style={{
         top: `${size + 8}px`,
         display: display,
@@ -244,7 +264,7 @@ function Avatar({
   return (
     <div
       style={style}
-      className="relative rounded-full border-[2px] border-white select-none"
+      className="relative rounded-full border-[2px] border-white dark:border-black select-none"
       onMouseEnter={() => {
         setDisplay('block');
       }}
@@ -261,7 +281,8 @@ function Avatar({
 function Mask() {
   return (
     <span
-      className="absolute top-[0px] left-[0px] bg-white opacity-60 rounded-full"
+      className="absolute top-[0px] left-[0px] 
+      bg-white dark:bg-black opacity-60 rounded-full"
       style={{
         width: `calc(100%)`,
         height: `calc(100%)`,
