@@ -111,7 +111,7 @@ export function createPresence(options: PresenceOptions): Promise<IPresence>;
 export function createPresence(options: PresenceOptions) {
   return new Promise((resolve) => {
     let id = options?.id || randomId();
-    let url = options?.url || 'https://prsc.yomo.dev';
+    let url = options?.url || 'https://prscd2.allegro.earth/v1';
     const internalOptions: InternalPresenceOptions = { ...options, id, url };
     const presence = new Presence(internalOptions);
     presence.onReady(() => {
