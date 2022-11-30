@@ -244,7 +244,7 @@ function Avatar({
   return (
     <div
       style={style}
-      className="relative rounded-full border-[2px] border-white"
+      className="relative rounded-full border-[2px] border-white select-none"
       onMouseEnter={() => {
         setDisplay('block');
       }}

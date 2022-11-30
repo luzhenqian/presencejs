@@ -18,7 +18,7 @@ const presence = createPresence({
 });
 
 root.render(
-  <div style={{ margin: '40px' }}>
+  <div style={{ padding: '200px' }}>
     <GroupHug presence={presence} id={id} avatar={avatar} name={randomName} />
   </div>
 );
