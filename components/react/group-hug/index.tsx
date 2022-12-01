@@ -45,7 +45,10 @@ export default function GroupHug(props: GroupHugProps) {
       channel = yomo.joinChannel('group-hug', myState);
 
       channel.subscribePeers(peers => {
-        setUsers([myState, ...(peers as User[])]);
+        setUsers([
+          myState,
+          ...(peers as User[]).filter(peer => 'avatar' in peer),
+        ]);
       });
 
       setUsers([myState]);
@@ -219,9 +222,7 @@ font-[400]"
                   border: 'none',
                 }}
               />
-              <span className="text-black dark:text-white">
-                {user.name}
-              </span>
+              <span className="text-black dark:text-white">{user.name}</span>
             </div>
           ))}
         </span>
@@ -234,20 +235,36 @@ function Tip({ display, name }) {
   const ctx = useContext(GroupHugCtx);
   const { size, self } = ctx!;
   return (
-    <span
-      className="absolute text-[14px] p-2 rounded-[6px] whitespace-nowrap shadow-md
-      bg-white dark:bg-[#383838]
+    <div
+      className="flex flex-col items-center absolute text-[14px]
       text-black dark:text-white
       font-[400]
       "
       style={{
-        top: `${size + 8}px`,
-        display: display,
+        top: `${size + 8 + 5}px`,
+        display: display ? '' : 'none',
         transform: `translateX(calc(-50% + ${size / 2}px))`,
       }}
     >
-      {`${name} ${name === self.name ? '(you)' : ''}`}
-    </span>
+    <div
+      className="w-[10px] h-[10px]
+bg-[white] dark:bg-[#383838]
+shadow-[0px_0px_2px_0px_rgb(0_0_0_/_0.1)]
+rotate-[135deg] z-10
+    "
+    ></div>
+    <div
+      className="absolute w-[12px] h-[12px]
+bg-[white] dark:bg-[#383838]
+top-[0.5px]
+rotate-[135deg] z-10
+    "
+    ></div>
+      <span className=" bg-white dark:bg-[#383838] p-2 rounded-[6px] whitespace-nowrap 
+      shadow-[0px_1px_4px_0px_rgb(0_0_0_/_0.1)] -translate-y-[5px]">{`${name} ${
+        name === self.name ? '(you)' : ''
+      }`}</span>
+    </div>
   );
 }
 
@@ -260,16 +277,16 @@ function Avatar({
   user: User;
   useTip?: boolean;
 }) {
-  const [display, setDisplay] = useState('none');
+  const [display, setDisplay] = useState(false);
   return (
     <div
       style={style}
       className="relative rounded-full border-[2px] border-white dark:border-black select-none"
       onMouseEnter={() => {
-        setDisplay('block');
+        setDisplay(true);
       }}
       onMouseLeave={() => {
-        setDisplay('none');
+        setDisplay(false);
       }}
     >
       {user.avatar ? <ImageAvatar user={user} /> : <TextAvatar user={user} />}
