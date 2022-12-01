@@ -163,7 +163,7 @@ function TextAvatar({ user }) {
 }
 
 function Others({ size, users }) {
-  const [display, setDisplay] = useState('none');
+  const [display, setDisplay] = useState(false);
 
   return (
     <div
@@ -186,45 +186,59 @@ function Others({ size, users }) {
       hover:text-[#000000]
       dark:hover:border-[#ffffff]
       dark:hover:text-[#ffffff]
-      ${
-        display === 'block'
-          ? 'bg-[#EAEAEA] dark:bg-[#333333]'
-          : 'bg-white dark:bg-black'
-      }`}
+      ${display ? 'bg-[#EAEAEA] dark:bg-[#333333]' : 'bg-white dark:bg-black'}`}
       >
         <span
           className="absolute inline-flex items-center justify-center w-full h-full rounded-full "
-          onClick={() => setDisplay(display === 'none' ? 'block' : 'none')}
+          onClick={() => setDisplay(!display)}
         >
           +{users.length - 5}
         </span>
 
         <span
-          className="p-[10px] absolute text-[14px] rounded-[6px] whitespace-nowrap shadow-md
-bg-white dark:bg-[#383838]
-font-[400]"
+          className="flex flex-col items-end
+           absolute text-[14px] whitespace-nowrap font-[400]"
           style={{
-            top: `${size + 8}px`,
-            display: display,
+            top: `${size + 8 + 5 / 2}px`,
+            display: display ? '' : 'none',
             right: `0`,
           }}
         >
-          {users.slice(5, users.length).map(user => (
-            <div
-              key={user.id}
-              className="flex items-center gap-2 p-[10px]
+          <div
+            className="w-[10px] h-[10px]
+            bg-[white] dark:bg-[#383838]
+            shadow-[0px_0px_2px_0px_rgb(0_0_0_/_0.1)] z-10"
+            style={{
+              transform: `translateX(calc(-${size}px / 2 + 10px / 2)) rotate(135deg)`,
+            }}
+          ></div>
+          <div
+            className="absolute w-[12px] h-[12px]
+            bg-[white] dark:bg-[#383838]
+            top-[0.5px] z-10"
+            style={{
+              transform: `translateX(calc(-${size}px / 2 + 10px / 2)) rotate(135deg)`,
+            }}
+          ></div>
+
+          <div className="bg-white dark:bg-[#383838] p-[10px] shadow-[0px_1px_4px_0px_rgb(0_0_0_/_0.1)] rounded-[6px] -translate-y-[5px]">
+            {users.slice(5, users.length).map(user => (
+              <div
+                key={user.id}
+                className="flex items-center gap-2 p-[10px]
               dark:hover:bg-[#444444] hover:bg-[#F5F5F5] rounded-[6px]"
-            >
-              <Avatar
-                user={user}
-                useTip={false}
-                style={{
-                  border: 'none',
-                }}
-              />
-              <span className="text-black dark:text-white">{user.name}</span>
-            </div>
-          ))}
+              >
+                <Avatar
+                  user={user}
+                  useTip={false}
+                  style={{
+                    border: 'none',
+                  }}
+                />
+                <span className="text-black dark:text-white">{user.name}</span>
+              </div>
+            ))}
+          </div>
         </span>
       </div>
     </div>
@@ -246,24 +260,24 @@ function Tip({ display, name }) {
         transform: `translateX(calc(-50% + ${size / 2}px))`,
       }}
     >
-    <div
-      className="w-[10px] h-[10px]
+      <div
+        className="w-[10px] h-[10px]
 bg-[white] dark:bg-[#383838]
 shadow-[0px_0px_2px_0px_rgb(0_0_0_/_0.1)]
 rotate-[135deg] z-10
     "
-    ></div>
-    <div
-      className="absolute w-[12px] h-[12px]
+      ></div>
+      <div
+        className="absolute w-[12px] h-[12px]
 bg-[white] dark:bg-[#383838]
 top-[0.5px]
 rotate-[135deg] z-10
     "
-    ></div>
-      <span className=" bg-white dark:bg-[#383838] p-2 rounded-[6px] whitespace-nowrap 
-      shadow-[0px_1px_4px_0px_rgb(0_0_0_/_0.1)] -translate-y-[5px]">{`${name} ${
-        name === self.name ? '(you)' : ''
-      }`}</span>
+      ></div>
+      <span
+        className=" bg-white dark:bg-[#383838] p-2 rounded-[6px] whitespace-nowrap 
+      shadow-[0px_1px_4px_0px_rgb(0_0_0_/_0.1)] -translate-y-[5px]"
+      >{`${name} ${name === self.name ? '(you)' : ''}`}</span>
     </div>
   );
 }
