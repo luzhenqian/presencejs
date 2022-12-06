@@ -30,7 +30,7 @@ const Home: NextPage = () => {
       <div>
         <div>name:{myState.name}</div>
         <input ref={inputRef} />
-        <div>其他用户：</div>
+        <div>other user:</div>
         <div>
           {peers.map(({ id, name }: any) => (
             <div key={id}>

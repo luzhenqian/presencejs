@@ -11,9 +11,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex flex-col h-screen w-screen">
+      <div className="flex flex-col w-screen h-screen">
         <div className="h-[40px] p-2 text-slate-200 bg-slate-900 border-b">
-          工具栏
+          tools bar
         </div>
         <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-[1px]">
           <Window /> <Window /> <Window /> <Window />

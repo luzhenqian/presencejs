@@ -13,7 +13,7 @@ const avatar = Math.random() > 0.5 ? `https://robohash.org/${id}` : void 0;
 const randomName = faker.name.fullName();
 const presence = createPresence({
   url: 'https://prscd2.allegro.earth/v1',
-  publicKey: 'BYePWMVCfkWRarcDLBIbSFzrMkDldWIBuKsA',
+  publicKey: 'kmJAUnCtkWbkNnhXYtZAGEJzGDGpFo1e1vkp6cm',
   id,
   appId: 'lzq',
 });
@@ -35,7 +35,7 @@ const App = () => {
         style={{ color: darkMode ? 'white' : 'black' }}
         onClick={() => setDarkMode(!darkMode)}
       >
-        {darkMode ? '关闭暗模式' : '开启暗模式'}
+        {darkMode ? 'close dark mode' : 'open dark mode'}
       </button>
       <GroupHug
         presence={presence}

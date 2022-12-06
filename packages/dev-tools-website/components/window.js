@@ -24,7 +24,7 @@ export function Window() {
     console.log(2);
     window.addEventListener('message', evt => {
       console.log('mmm', evt);
-      if(url && url.includes && url.includes(evt.origin)) setCanUseTools(true);
+      if (url && url.includes && url.includes(evt.origin)) setCanUseTools(true);
     });
   }, []);
   return (
@@ -61,8 +61,8 @@ export function Window() {
             </div>
           </div>
         ) : (
-          <div className="text-sm flex justify-center items-center text-slate-200">
-            您的网站没安装开发者工具
+          <div className="flex items-center justify-center text-sm text-slate-200">
+            your site not installed developer tools
           </div>
         )}
         <input

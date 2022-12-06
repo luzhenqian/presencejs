@@ -15,16 +15,14 @@
 
         transport.closed
           .then(() => {
-            console.log('连接优雅关闭');
+            console.log('connection closed');
           })
           .catch(error => {
-            console.log('连接关闭失败');
+            console.log('connection error: ' + error);
           });
 
         await transport.ready;
-        // 连接准备就绪
 
-        // 向服务端发送两个数据报
         const writer = transport.datagrams.writable.getWriter();
         // ABC
         const data1 = new Uint8Array([65, 66, 67]);
@@ -33,14 +31,13 @@
         writer.write(data1);
         writer.write(data2);
 
-        // 从服务端读取数据报
         const reader = transport.datagrams.readable.getReader();
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
             break;
           }
-          console.log('服务端返回的数据报：', value);
+          console.log('data: ', value);
         }
       }
 

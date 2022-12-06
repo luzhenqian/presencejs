@@ -30,23 +30,20 @@ export default function Home() {
 
         transport.closed
           .then(() => {
-            console.log('连接优雅关闭');
+            console.log('connection closed');
           })
           .catch(error => {
-            console.log('连接关闭失败');
+            console.log('close connection error: ' + error);
           });
 
         await transport.ready;
-        // 连接准备就绪
 
-        // 向服务端发送数据报
         const writer = transport.datagrams.writable.getWriter();
         const data = 'Hello, WebTransport!';
         writer.write(data);
         setLogs(oldLog => [...oldLog, log('i', data.toString())]);
         writer.close();
 
-        // 从服务端读取数据报
         const reader = transport.datagrams.readable.getReader();
         while (true) {
           const { value, done } = await reader.read();
@@ -95,7 +92,10 @@ export default function Home() {
       <form className="pure-form" onSubmit={e => e.preventDefault()}>
         <fieldset>
           <input ref={inputRef} type="text" />
-          <button className="pure-button pure-button-primary" onClick={sendData}>
+          <button
+            className="pure-button pure-button-primary"
+            onClick={sendData}
+          >
             send data
           </button>
         </fieldset>
