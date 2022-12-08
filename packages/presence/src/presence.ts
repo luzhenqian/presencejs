@@ -100,6 +100,7 @@ export class Presence implements IPresence {
         });
       })
       .catch((e: Error) => {
+        console.log(e);
         setTimeout(() => {
           this.#connect();
         }, 2_000);

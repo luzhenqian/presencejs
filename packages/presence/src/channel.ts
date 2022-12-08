@@ -91,8 +91,12 @@ export class Channel implements IChannel {
   }
   async #write(data: Uint8Array) {
     if (!this.#writer) {
+      if (this.#transport.datagrams.writable.locked) {
+        return
+      }
       this.#writer = this.#transport.datagrams.writable.getWriter();
     }
+    await this.#writer.ready;
     this.#writer.write(data);
     // writer.close();
   }
