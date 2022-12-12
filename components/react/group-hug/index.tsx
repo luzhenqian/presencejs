@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { IChannel } from '@yomo/presence';
-import { GroupHugDefaultProps, GroupHugProps, User } from './types';
+import { GroupHugProps, User } from './types.d';
 
 const colors = [
   '#FF38D1',
@@ -22,7 +22,9 @@ const GroupHugCtx = createContext<{
   darkMode: boolean;
 } | null>(null);
 
-export default function GroupHug(props: GroupHugProps) {
+export default function GroupHug(
+  props: GroupHugProps & typeof GroupHugDefaultProps
+) {
   const { id, avatar, darkMode } = props;
   let { avatarBorderColor, name } = props;
   const size = sizes[props.size];
@@ -245,7 +247,7 @@ function Others({ size, users }) {
   );
 }
 
-function Tip({ display, name }) {
+function Tip({ display, name, id }) {
   const ctx = useContext(GroupHugCtx);
   const { size, self } = ctx!;
   return (
@@ -277,7 +279,7 @@ rotate-[135deg] z-10
       <span
         className=" bg-white dark:bg-[#383838] p-2 rounded-[6px] whitespace-nowrap 
       shadow-[0px_1px_4px_0px_rgb(0_0_0_/_0.1)] -translate-y-[5px]"
-      >{`${name} ${name === self.name ? '(you)' : ''}`}</span>
+      >{`${name} ${id === self.id ? '(you)' : ''}`}</span>
     </div>
   );
 }
@@ -304,7 +306,7 @@ function Avatar({
       }}
     >
       {user.avatar ? <ImageAvatar user={user} /> : <TextAvatar user={user} />}
-      {useTip && <Tip display={display} name={user.name} />}
+      {useTip && <Tip display={display} name={user.name} id={user.id} />}
     </div>
   );
 }
@@ -321,5 +323,12 @@ function Mask() {
     ></span>
   );
 }
+
+export const GroupHugDefaultProps = {
+  size: 'md',
+  avatar: '',
+  grouped: true,
+  darkMode: false,
+};
 
 GroupHug.defaultProps = GroupHugDefaultProps;

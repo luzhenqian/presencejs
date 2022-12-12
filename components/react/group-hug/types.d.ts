@@ -22,9 +22,11 @@ type FilterNotOptional<T> = Pick<
 
 type PartialEither<T, K extends keyof any> = {
   [P in Exclude<keyof FilterOptional<T>, K>]-?: T[P];
-} & { [P in Exclude<keyof FilterNotOptional<T>, K>]?: T[P] } & {
-  [P in Extract<keyof T, K>]?: undefined;
-};
+} &
+  { [P in Exclude<keyof FilterNotOptional<T>, K>]?: T[P] } &
+  {
+    [P in Extract<keyof T, K>]?: undefined;
+  };
 
 type Object = {
   [name: string]: any;
@@ -36,13 +38,6 @@ export type EitherOr<O extends Object, L extends string, R extends string> = (
 ) &
   Omit<O, L | R>;
 
-export const GroupHugDefaultProps = {
-  size: 'md',
-  avatar: '',
-  grouped: true,
-  darkMode: false,
-};
-
 export type GroupHugProps = {
   presence: Promise<IPresence>;
   avatarBorderColor?: string;
@@ -52,7 +47,7 @@ export type GroupHugProps = {
   avatar?: string;
   name: string;
   darkMode?: boolean;
-} & typeof GroupHugDefaultProps;
+};
 
 export type User = {
   id: string;
@@ -61,3 +56,6 @@ export type User = {
   avatarBorderColor: string;
   name: string;
 };
+
+declare const GroupHug: (props: GroupHugProps) => JSX.Element;
+export default GroupHug;
