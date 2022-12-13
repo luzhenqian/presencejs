@@ -42,7 +42,7 @@ export default function LayoutWrapper(props) {
     <>
       <Layout {...props} />
       {presence && (
-        <div class="fixed right-[10vw] top-[1.5vh] z-[1000]">
+        <div className="fixed right-[10vw] top-[1.5vh] z-[1000]">
           <GroupHug
             presence={presence}
             id={id}
